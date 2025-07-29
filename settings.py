@@ -86,29 +86,8 @@ TEXTRACT_AWS_SECRET_ACCESS_KEY = os.environ.get('TEXTRACT_AWS_SECRET_ACCESS_KEY'
 UMLS_API_KEY = os.environ.get('UMLS_API_KEY', 'your-umls-api-key')
 
 
-# AWS Cognito Configuration
-AWS_REGION = os.environ.get('AWS_REGION', 'us-east-1')
-COGNITO_DOMAIN = os.environ.get('COGNITO_DOMAIN', 'your-domain')
-USER_POOL_ID = os.environ.get('USER_POOL_ID', 'your-user-pool-id')
-CLIENT_ID = os.environ.get('USER_POOL_CLIENT_ID', 'your-app-client-id')
-CLIENT_SECRET = os.environ.get('USER_POOL_CLIENT_SECRET', 'your-app-client-secret')
-
-
-REDIRECT_URI = f'http://localhost:{PORT}/auth/callback' if DEBUG else 'https://demo.arsmedicatech.com/auth/callback'
-COGNITO_LOGIN_URL = f'https://{COGNITO_DOMAIN}/oauth2/authorize?client_id={CLIENT_ID}&response_type=code&scope=openid+email+profile&redirect_uri={REDIRECT_URI}&identity_provider=Google'
-
-LOGOUT_URI = f"http://localhost:{PORT}/" if DEBUG else "https://demo.arsmedicatech.com/"
-
-
 REACT_PORT = os.environ.get('REACT_PORT', 3000)
 APP_URL = f'http://localhost:{REACT_PORT}/' if DEBUG else 'https://demo.arsmedicatech.com/'
 
-
-print("COGNITO DOMAIN:", COGNITO_DOMAIN)
-print("USER POOL ID:", USER_POOL_ID)
-print("CLIENT ID:", CLIENT_ID)
-
-print("REDIRECT URI:", REDIRECT_URI)
-print("COGNITO LOGIN URL:", COGNITO_LOGIN_URL)
 
 print("APP URL:", APP_URL)
