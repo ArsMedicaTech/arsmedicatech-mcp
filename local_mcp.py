@@ -1,14 +1,12 @@
 """"""
 import datetime
-
 import os
-
 # add pwd to path...
 import sys
+
 sys.path.append(os.path.join(os.getcwd(), 'lib', 'llm', 'mcp'))
 
 from lib.llm.mcp.mcp_server import mcp
-
 
 if __name__ == "__main__":
     ts = datetime.datetime.now().isoformat()
