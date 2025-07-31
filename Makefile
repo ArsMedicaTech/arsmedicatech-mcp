@@ -1,9 +1,14 @@
 include .env
 
+# To initialize `.venv`: `python3 -m venv .venv`.
 
 run-mcp:
 	.\.venv\Scripts\activate
 	python lib/llm/mcp/mcp_server.py
+
+run-local:
+	.\.venv\Scripts\activate
+	python local_mcp.py
 
 
 local-encryption-key:
