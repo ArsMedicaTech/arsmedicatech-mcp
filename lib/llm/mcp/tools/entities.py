@@ -3,7 +3,7 @@ ICD Autocoder tools for MCP server.
 """
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 # Add the project root to the path to import the ICD Autocoder service
 project_root = Path(__file__).parent.parent.parent.parent.parent
@@ -18,7 +18,7 @@ except ImportError:
 from settings import logger
 
 
-def predict_icd_codes(note_text: str, top_k: int = 5) -> List[Dict[str, Any]]:
+def predict_icd_codes(note_text: str, top_k: int = 5) -> Union[List[Dict[str, Any]], str]:
     """
     Map clinical free-text to ICD-10 codes using the ICD Autocoder service.
     
@@ -30,16 +30,11 @@ def predict_icd_codes(note_text: str, top_k: int = 5) -> List[Dict[str, Any]]:
         List of dictionaries containing ICD codes and entity information
     """
     if not ICDAutoCoderService:
-        logger.warning("ICD Autocoder service not available, returning placeholder codes")
-        return [
-            {"code": "R53.83", "name": "Other fatigue", "text": "fatigue", "confidence": 0.8},
-            {"code": "R53.81", "name": "Other malaise", "text": "malaise", "confidence": 0.7},
-            {"code": "R53.82", "name": "Chronic fatigue, unspecified", "text": "chronic fatigue", "confidence": 0.6}
-        ][:top_k]
-    
+        logger.error("ICD Autocoder service not available, returning placeholder codes")
+        return "ICD Autocoder service not available"
     try:
         # Initialize the ICD Autocoder service
-        service = ICDAutoCoderService(note_text)
+        service: ICDAutoCoderService = ICDAutoCoderService(note_text)
         
         # Run the main processing pipeline
         result = service.main()
@@ -63,20 +58,14 @@ def predict_icd_codes(note_text: str, top_k: int = 5) -> List[Dict[str, Any]]:
         
         # If no ICD codes found, return some default codes
         if not formatted_results:
-            logger.warning("No ICD codes found, returning default codes")
-            return [
-                {"code": "R53.83", "name": "Other fatigue", "text": "fatigue", "confidence": 0.5},
-                {"code": "R53.81", "name": "Other malaise", "text": "malaise", "confidence": 0.5}
-            ][:top_k]
+            logger.warning("No ICD codes found.")
+            return "No ICD codes found."
         
         return formatted_results
         
     except Exception as e:
         logger.error(f"Error in ICD code prediction: {e}")
-        return [
-            {"code": "R53.83", "name": "Other fatigue", "text": "fatigue", "confidence": 0.5},
-            {"code": "R53.81", "name": "Other malaise", "text": "malaise", "confidence": 0.5}
-        ][:top_k]
+        return f"Error in ICD code prediction: {e}"
 
 
 def extract_medical_entities(note_text: str) -> List[Dict[str, Any]]:
