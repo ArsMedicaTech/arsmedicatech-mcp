@@ -16,6 +16,10 @@ local-encryption-key:
 	@python3 -c "import secrets, string; print('ENCRYPTION_KEY=' + ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(32)))"
 
 
+mypy:
+	.\.venv\Scripts\activate
+	mypy --explicit-package-bases lib settings.py
+
 
 # Docker
 auth:

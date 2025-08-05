@@ -3,6 +3,7 @@ ArsMedicaTech MCP Server Initialization
 """
 import json
 
+from amt_nano.services.encryption import get_encryption_service
 from fastmcp import Context, FastMCP
 from fastmcp.server.dependencies import get_http_request
 from fastmcp.server.middleware.logging import LoggingMiddleware
@@ -11,7 +12,6 @@ from openai import AsyncOpenAI
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 
-from lib.services.encryption import get_encryption_service
 from settings import logger
 
 mcp: FastMCP[Context] = FastMCP("ArsMedicaTech MCP Server")
@@ -72,7 +72,7 @@ async def rag(query: str) -> str:
 
     client = AsyncOpenAI(api_key=key)
 
-    from lib.db.vec import Vec
+    from amt_nano.db.vec import Vec
     vec = Vec(client)
     logger.debug(f"RAG query: {query}")
     msg = await vec.rag_chat(query)
