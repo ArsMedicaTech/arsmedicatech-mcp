@@ -120,10 +120,12 @@ def generate_placeholder_findings(image_url: str, view: Optional[str], prompt: O
         image_type = "mri"
     elif "ct" in image_url.lower():
         image_type = "ct_scan"
-    
+
+    findings: Dict[str, Any] = {}
+
     # Generate findings based on image type
     if image_type == "chest_xray":
-        findings: Dict[str, Any] = {
+        findings = {
             "image_type": "Chest X-ray",
             "view": view or "PA",
             "findings": {
@@ -147,7 +149,7 @@ def generate_placeholder_findings(image_url: str, view: Optional[str], prompt: O
             "recommendations": ["No immediate action required"]
         }
     elif image_type == "dermatology":
-        findings: Dict[str, Any] = {
+        findings = {
             "image_type": "Dermatology",
             "view": view or "DermCloseUp",
             "findings": {
@@ -171,7 +173,7 @@ def generate_placeholder_findings(image_url: str, view: Optional[str], prompt: O
             "recommendations": ["Refer to dermatologist for biopsy", "Document with photography"]
         }
     elif image_type == "pathology":
-        findings: Dict[str, Any] = {
+        findings = {
             "image_type": "Pathology",
             "view": view or "Other",
             "findings": {
@@ -195,7 +197,7 @@ def generate_placeholder_findings(image_url: str, view: Optional[str], prompt: O
             "recommendations": ["Expert pathologist review recommended", "Additional staining may be needed"]
         }
     else:
-        findings: Dict[str, Any] = {
+        findings = {
             "image_type": "Medical Image",
             "view": view or "Other",
             "findings": {

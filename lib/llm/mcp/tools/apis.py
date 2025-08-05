@@ -2,22 +2,14 @@
 API service tools for MCP server - Medline, ClinicalTrials, and NCBI integration.
 """
 import sys
-import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, TypedDict, Union
 
 # Add the project root to the path to import the API services
 project_root = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-try:
-    from amt_nano.services.apis import NCBI, ClinicalTrials, ICD10Code, Medline
-except ImportError:
-    # Fallback for when the services are not available
-    Medline = None
-    ClinicalTrials = None
-    NCBI = None
-    ICD10Code = None
+from amt_nano.services.apis import NCBI, ClinicalTrials, ICD10Code, Medline
 
 from settings import logger
 
@@ -31,17 +23,7 @@ def fetch_medline_info(icd10_code: str) -> Dict[str, Any]:
     
     Returns:
         Dictionary containing medical information from Medline
-    """
-    if not Medline:
-        logger.warning("Medline service not available, returning placeholder data")
-        return {
-            "condition": "Type 2 diabetes mellitus",
-            "description": "A chronic condition affecting how your body metabolizes glucose",
-            "symptoms": ["Increased thirst", "Frequent urination", "Fatigue"],
-            "treatments": ["Lifestyle changes", "Oral medications", "Insulin therapy"],
-            "source": "Medline Plus"
-        }
-    
+    """    
     try:
         # Create ICD10Code instance
         icd_code = ICD10Code(icd10_code)
@@ -75,7 +57,31 @@ def fetch_medline_info(icd10_code: str) -> Dict[str, Any]:
         }
 
 
-def fetch_clinical_trials(condition: str, max_results: int = 10) -> Dict[str, Any]:
+class ClinicalTrial(TypedDict):
+    nct_id: str
+    title: str
+    condition: str
+    status: str
+    phase: str
+    enrollment: str
+    location: List[Dict[str, Any]]
+    sponsor: str
+    start_date: str
+    completion_date: str
+
+class ClinicalTrialsResult(TypedDict):
+    trials: List[ClinicalTrial]
+    total_count: int
+    condition: str
+    source: str
+
+class ClinicalTrialsError(TypedDict):
+    error: str
+    condition: str
+    source: str
+
+
+def fetch_clinical_trials(condition: str, max_results: int = 10) -> Union[ClinicalTrialsResult, ClinicalTrialsError]:
     """
     Fetch clinical trial data from ClinicalTrials.gov.
     
@@ -96,7 +102,17 @@ def fetch_clinical_trials(condition: str, max_results: int = 10) -> Dict[str, An
                     "condition": condition,
                     "status": "Recruiting",
                     "phase": "Phase 2",
-                    "enrollment": "100 participants"
+                    "enrollment": "100 participants",
+                    "location": [
+                        {
+                            "facility": "Sample Hospital",
+                            "city": "Sample City",
+                            "country": "Sample Country"
+                        }
+                    ],
+                    "sponsor": "Sample Sponsor",
+                    "start_date": "2024-01-01",
+                    "completion_date": "2025-01-01"
                 }
             ],
             "total_count": 1,
@@ -121,10 +137,10 @@ def fetch_clinical_trials(condition: str, max_results: int = 10) -> Dict[str, An
         
         # Process and format the results
         trials = result.get("studies", [])
-        formatted_trials: List[Dict[str, Any]] = []
+        formatted_trials: List[ClinicalTrial] = []
         
         for trial in trials[:max_results]:
-            formatted_trial = {
+            formatted_trial: ClinicalTrial = {
                 "nct_id": trial.get("nctId", ""),
                 "title": trial.get("briefTitle", ""),
                 "condition": condition,
@@ -138,12 +154,12 @@ def fetch_clinical_trials(condition: str, max_results: int = 10) -> Dict[str, An
             }
             formatted_trials.append(formatted_trial)
         
-        return {
-            "trials": formatted_trials,
-            "total_count": len(trials),
-            "condition": condition,
-            "source": "ClinicalTrials.gov"
-        }
+        return ClinicalTrialsResult(
+            trials=formatted_trials,
+            total_count=len(trials),
+            condition=condition,
+            source="ClinicalTrials.gov"
+        )
         
     except Exception as e:
         logger.error(f"Error in clinical trials fetch: {e}")
@@ -154,7 +170,28 @@ def fetch_clinical_trials(condition: str, max_results: int = 10) -> Dict[str, An
         }
 
 
-def fetch_pubmed_studies(query: str, max_results: int = 10, include_abstracts: bool = False) -> Dict[str, Any]:
+class PubMedArticle(TypedDict):
+    pmid: str
+    title: str
+    journal: str
+    authors: str
+    pubdate: str
+    abstract: Optional[str]
+
+class PubMedSearchResult(TypedDict):
+    articles: List[PubMedArticle]
+    total_count: int
+    query: str
+    source: str
+
+class PubMedSearchError(TypedDict):
+    error: str
+    query: str
+    source: str
+
+
+
+def fetch_pubmed_studies(query: str, max_results: int = 10, include_abstracts: bool = False) -> Union[PubMedSearchResult, PubMedSearchError]:
     """
     Fetch medical studies and articles from NCBI's PubMed database.
     
@@ -197,9 +234,9 @@ def fetch_pubmed_studies(query: str, max_results: int = 10, include_abstracts: b
         articles = ncbi_service.fetch_ncbi_studies(query, debug=False)
         
         # Format the results
-        formatted_articles: List[Dict[str, Any]] = []
+        formatted_articles: List[PubMedArticle] = []
         for article in articles[:max_results]:
-            formatted_article = {
+            formatted_article: PubMedArticle = {
                 "pmid": article.get("pmid", ""),
                 "title": article.get("title", ""),
                 "journal": article.get("journal", ""),
@@ -225,7 +262,13 @@ def fetch_pubmed_studies(query: str, max_results: int = 10, include_abstracts: b
         }
 
 
-def search_medical_literature(condition: str, max_results: int = 10) -> Dict[str, Any]:
+class MedicalLiteratureSearchResult(TypedDict):
+    condition: str
+    sources: Dict[str, Any]
+    summary: Dict[str, int]
+
+
+def search_medical_literature(condition: str, max_results: int = 10) -> MedicalLiteratureSearchResult:
     """
     Comprehensive search across multiple medical literature sources.
     
@@ -236,7 +279,7 @@ def search_medical_literature(condition: str, max_results: int = 10) -> Dict[str
     Returns:
         Dictionary containing results from multiple sources
     """
-    results = {
+    results: MedicalLiteratureSearchResult = {
         "condition": condition,
         "sources": {},
         "summary": {
@@ -269,7 +312,14 @@ def search_medical_literature(condition: str, max_results: int = 10) -> Dict[str
     return results
 
 
-def get_medical_evidence(icd10_code: str, condition: str) -> Dict[str, Any]:
+class Evidence(TypedDict):
+    icd10_code: str
+    condition: str
+    medline_info: Dict[str, Any]
+    literature: MedicalLiteratureSearchResult
+    summary: Dict[str, bool]
+
+def get_medical_evidence(icd10_code: str, condition: str) -> Evidence:
     """
     Get comprehensive medical evidence for a condition including Medline info and literature.
     
@@ -280,11 +330,19 @@ def get_medical_evidence(icd10_code: str, condition: str) -> Dict[str, Any]:
     Returns:
         Dictionary containing comprehensive medical evidence
     """
-    evidence = {
+    evidence: Evidence = {
         "icd10_code": icd10_code,
         "condition": condition,
         "medline_info": {},
-        "literature": {},
+        "literature": {
+            "condition": condition,
+            "sources": {},
+            "summary": {
+                "total_trials": 0,
+                "total_articles": 0,
+                "total_sources": 0
+            }
+        },
         "summary": {
             "has_medline_data": False,
             "has_literature_data": False

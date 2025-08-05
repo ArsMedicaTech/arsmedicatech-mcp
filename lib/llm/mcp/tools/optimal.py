@@ -9,21 +9,15 @@ from typing import Any, Dict, List, Optional, Union
 project_root = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-try:
-    from amt_nano.services.optimal import (OptimalMetadata, OptimalSchema,
-                                           OptimalService)
-except ImportError:
-    # Fallback for when the service is not available
-    OptimalService = None
-    OptimalSchema = None
-    OptimalMetadata = None
+from amt_nano.services.optimal import (OptimalMetadata, OptimalSchema,
+                                       OptimalService)
 
 from settings import logger
 
 
 def create_linear_optimization_problem(
     objective_type: str,
-    variables: List[Dict[str, Union[str, int, float]]],
+    variables: List[Dict[str, Union[str, int]]],
     constraints: List[Dict[str, Any]],
     parameters: Optional[Dict[str, Any]] = None
 ) -> Dict[str, Any]:
@@ -66,7 +60,7 @@ def create_linear_optimization_problem(
         )
         
         # Create objective function
-        objective = {
+        objective: Dict[str, Any] = {
             "type": "linear",
             "coefficients": [1.0] * len(variables)  # Default coefficients
         }
@@ -186,23 +180,21 @@ def create_portfolio_optimization(
     Returns:
         Dictionary containing the portfolio optimization problem
     """
-    n_assets = len(assets)
-    
     # Define variables (portfolio weights)
-    variables: List[Dict[str, Union[str, int, float]]] = []
-    for i, asset in enumerate(assets):
+    variables: List[Dict[str, Union[str, int]]] = []
+    for asset in assets:
         variables.append({
             "name": f"weight_{asset}",
             "type": "continuous",
-            "lower_bound": 0.0,
-            "upper_bound": 1.0
+            "lower_bound": 0,
+            "upper_bound": 1
         })
     
     # Define constraints
     constraints: List[Dict[str, Any]] = [
         {
             "type": "equality",
-            "expression": f"sum(weight_{asset} for asset in assets) = 1.0",
+            "expression": " + ".join([f"weight_{asset}" for asset in assets]) + " = 1.0",
             "description": "Portfolio weights sum to 1"
         }
     ]
@@ -211,17 +203,10 @@ def create_portfolio_optimization(
     if target_return is not None:
         return_constraint = {
             "type": "inequality",
-            "expression": f"sum(weight_{asset} * return_{asset} for asset in assets) >= {target_return}",
+            "expression": " + ".join([f"{expected_returns[i]} * weight_{asset}" for i, asset in enumerate(assets)]) + f" >= {target_return}",
             "description": f"Target return constraint: {target_return}"
         }
         constraints.append(return_constraint)
-    
-    # Create objective function (minimize portfolio variance)
-    objective = {
-        "type": "quadratic",
-        "description": "Minimize portfolio variance",
-        "coefficients": covariance_matrix
-    }
     
     # Create problem schema
     problem = create_linear_optimization_problem(
@@ -267,14 +252,14 @@ def create_resource_allocation_problem(
         Dictionary containing the resource allocation problem
     """
     # Define variables (allocation amounts)
-    variables: List[Dict[str, Union[str, int, float]]] = []
+    variables: List[Dict[str, Union[str, int]]] = []
     for task in tasks:
         for resource in resources:
             variables.append({
                 "name": f"allocation_{task}_{resource}",
                 "type": "continuous",
-                "lower_bound": 0.0,
-                "upper_bound": resource_capacities.get(resource, 100.0)
+                "lower_bound": 0,
+                "upper_bound": int(resource_capacities.get(resource, 100.0))
             })
     
     # Define constraints
@@ -283,9 +268,11 @@ def create_resource_allocation_problem(
     # Resource capacity constraints
     for resource in resources:
         capacity = resource_capacities.get(resource, 100.0)
+        task_terms = [f"allocation_{task}_{resource}" for task in tasks]
+        sum_expression = " + ".join(task_terms)
         constraint = {
             "type": "inequality",
-            "expression": f"sum(allocation_{task}_{resource} for task in tasks) <= {capacity}",
+            "expression": f"{sum_expression} <= {capacity}",
             "description": f"Resource {resource} capacity constraint"
         }
         constraints.append(constraint)
@@ -301,13 +288,6 @@ def create_resource_allocation_problem(
                     "description": f"Task {task} minimum requirement for {resource}"
                 }
                 constraints.append(constraint)
-    
-    # Create objective function (maximize allocation efficiency)
-    objective = {
-        "type": "linear",
-        "description": "Maximize allocation efficiency",
-        "coefficients": [1.0] * len(variables)
-    }
     
     # Create problem schema
     problem = create_linear_optimization_problem(
@@ -356,7 +336,7 @@ def create_supply_chain_optimization(
         Dictionary containing the supply chain optimization problem
     """
     # Define variables (flow amounts)
-    variables: List[Dict[str, Union[str, int, float]]] = []
+    variables: List[Dict[str, Union[str, int]]] = []
     
     # Supplier to warehouse flows
     for supplier in suppliers:
@@ -364,8 +344,8 @@ def create_supply_chain_optimization(
             variables.append({
                 "name": f"flow_supplier_{supplier}_warehouse_{warehouse}",
                 "type": "continuous",
-                "lower_bound": 0.0,
-                "upper_bound": supplier_capacities.get(supplier, 1000.0)
+                "lower_bound": 0,
+                "upper_bound": int(supplier_capacities.get(supplier, 1000.0))
             })
     
     # Warehouse to customer flows
@@ -374,8 +354,8 @@ def create_supply_chain_optimization(
             variables.append({
                 "name": f"flow_warehouse_{warehouse}_customer_{customer}",
                 "type": "continuous",
-                "lower_bound": 0.0,
-                "upper_bound": warehouse_capacities.get(warehouse, 1000.0)
+                "lower_bound": 0,
+                "upper_bound": int(warehouse_capacities.get(warehouse, 1000.0))
             })
     
     # Define constraints
@@ -420,13 +400,6 @@ def create_supply_chain_optimization(
         }
         constraints.append(constraint)
     
-    # Create objective function (minimize total cost)
-    objective = {
-        "type": "linear",
-        "description": "Minimize total transportation cost",
-        "coefficients": [1.0] * len(variables)  # Simplified cost coefficients
-    }
-    
     # Create problem schema
     problem = create_linear_optimization_problem(
         objective_type="minimize",
@@ -462,7 +435,7 @@ def validate_optimization_problem(problem_schema: Dict[str, Any]) -> Dict[str, A
     Returns:
         Dictionary containing validation results
     """
-    validation_result = {
+    validation_result: Dict[str, Any] = {
         "is_valid": True,
         "errors": [],
         "warnings": []
@@ -487,18 +460,18 @@ def validate_optimization_problem(problem_schema: Dict[str, Any]) -> Dict[str, A
         
         # Check variables
         if "variables" in problem_schema:
-            variables = problem_schema["variables"]
-            if not isinstance(variables, list) or len(variables) == 0:
+            variables: List[Dict[str, Any]] = problem_schema["variables"]
+            if len(variables) == 0:
                 validation_result["is_valid"] = False
                 validation_result["errors"].append("Variables must be a non-empty list")
             
             # Check variable structure
             for i, var in enumerate(variables):
-                if not isinstance(var, dict):
-                    validation_result["errors"].append(f"Variable {i} must be a dictionary")
-                elif "name" not in var:
+                if "name" not in var:
                     validation_result["errors"].append(f"Variable {i} missing 'name' field")
-        
+                elif "type" not in var:
+                    validation_result["errors"].append(f"Variable {i} missing 'type' field")
+
         # Check constraints
         if "constraints" in problem_schema:
             constraints = problem_schema["constraints"]
@@ -508,11 +481,8 @@ def validate_optimization_problem(problem_schema: Dict[str, Any]) -> Dict[str, A
         
         # Check initial guess
         if "initial_guess" in problem_schema:
-            initial_guess = problem_schema["initial_guess"]
-            if not isinstance(initial_guess, list):
-                validation_result["is_valid"] = False
-                validation_result["errors"].append("Initial guess must be a list")
-            elif len(initial_guess) != len(problem_schema.get("variables", [])):
+            initial_guess: List[Any] = problem_schema["initial_guess"]
+            if len(initial_guess) != len(problem_schema.get("variables", [])):
                 validation_result["warnings"].append("Initial guess length doesn't match number of variables")
         
         # Check objective

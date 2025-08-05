@@ -3,7 +3,7 @@ Bayesian API tools for MCP server - Bayesian inference for medical models.
 """
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import requests
 
@@ -18,7 +18,7 @@ URL_BASE = 'https://demo.arsmedicatech.com'
 # URL_BASE = 'http://localhost:62295'  # For local development
 
 # Model schemas - define the expected data structure for each model
-MODEL_SCHEMAS = {
+MODEL_SCHEMAS: Dict[str, Dict[str, Any]] = {
     "sepsis": {
         "description": "Sepsis prediction model",
         "required_fields": ["temp", "hr", "wbc"],
@@ -58,13 +58,14 @@ def call_bayesian_model(model: str, data: Dict[str, Any]) -> Dict[str, Any]:
     try:
         # Validate model exists
         if model not in MODEL_SCHEMAS:
+            model_schemas_str = ", ".join([str(k) for k in MODEL_SCHEMAS.keys()])
             return {
-                "error": f"Unknown model '{model}'. Available models: {list(MODEL_SCHEMAS.keys())}",
+                "error": f"Unknown model '{model}'. Available models: {model_schemas_str}",
                 "status": "error"
             }
         
         # Validate required fields
-        schema = MODEL_SCHEMAS[model]
+        schema: Dict[str, Any] = MODEL_SCHEMAS[model] # type: ignore
         missing_fields: List[str] = []
         for field in schema["required_fields"]:
             if field not in data:
@@ -80,9 +81,12 @@ def call_bayesian_model(model: str, data: Dict[str, Any]) -> Dict[str, Any]:
         type_errors: List[str] = []
         for field, value in data.items():
             if field in schema["field_types"]:
-                expected_type = schema["field_types"][field]
+                # error: Value of type "Collection[str]" is not indexable
+                expected_type: type = schema["field_types"][field]
                 if not isinstance(value, expected_type):
-                    type_errors.append(f"Field '{field}' should be {expected_type.__name__}, got {type(value).__name__}")
+                    type_errors.append(
+                        f"Field '{field}' should be {getattr(expected_type, '__name__', str(expected_type))}, got {type(value).__name__}"
+                    )
         
         if type_errors:
             return {
@@ -156,14 +160,14 @@ def predict_sepsis(
         Dictionary containing sepsis prediction results
     """
     # Validate required parameters
-    if temp is None or hr is None or wbc is None:
+    if not temp or not hr or not wbc:
         return {
             "error": "Temperature, heart rate, and WBC are required parameters",
             "status": "error"
         }
     
     # Prepare data dictionary
-    data = {
+    data: Dict[str, Any] = {
         "temp": temp,
         "hr": hr,
         "wbc": wbc
@@ -189,7 +193,7 @@ def get_available_models() -> Dict[str, Any]:
     """
     models_info = {}
     
-    for model_name, schema in MODEL_SCHEMAS.items():
+    for model_name, schema in MODEL_SCHEMAS.items(): # type: ignore
         models_info[model_name] = {
             "description": schema["description"],
             "required_fields": schema["required_fields"],
@@ -288,13 +292,20 @@ def batch_predict_sepsis(patient_data: List[Dict[str, Any]]) -> Dict[str, Any]:
             hr = patient.get("hr")
             wbc = patient.get("wbc")
             
-            # Extract optional fields
-            systolic_bp = patient.get("systolic_bp")
-            diastolic_bp = patient.get("diastolic_bp")
-            respiratory_rate = patient.get("respiratory_rate")
-            
-            # Make prediction
-            result = predict_sepsis(temp, hr, wbc, systolic_bp, diastolic_bp, respiratory_rate)
+            # Check for missing required fields
+            if temp is None or hr is None or wbc is None:
+                result = {
+                    "error": "Missing required fields: temp, hr, and wbc are required for sepsis prediction.",
+                    "status": "error"
+                }
+            else:
+                # Extract optional fields
+                systolic_bp = patient.get("systolic_bp")
+                diastolic_bp = patient.get("diastolic_bp")
+                respiratory_rate = patient.get("respiratory_rate")
+                
+                # Make prediction
+                result = predict_sepsis(temp, hr, wbc, systolic_bp, diastolic_bp, respiratory_rate)
             
             results["results"].append({
                 "patient_index": i,

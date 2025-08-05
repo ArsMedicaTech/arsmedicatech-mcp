@@ -1,19 +1,9 @@
 """
 ICD Autocoder tools for MCP server.
 """
-import sys
-from pathlib import Path
 from typing import Any, Dict, List, Union
 
-# Add the project root to the path to import the ICD Autocoder service
-project_root = Path(__file__).parent.parent.parent.parent.parent
-sys.path.insert(0, str(project_root))
-
-try:
-    from amt_nano.services.icd_autocoder_service import ICDAutoCoderService
-except ImportError:
-    # Fallback for when the service is not available
-    ICDAutoCoderService = None
+from amt_nano.services.icd_autocoder_service import ICDAutoCoderService
 
 from settings import logger
 
