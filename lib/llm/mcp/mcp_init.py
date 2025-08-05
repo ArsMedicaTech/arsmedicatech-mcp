@@ -72,7 +72,7 @@ async def rag(query: str) -> str:
 
     client = AsyncOpenAI(api_key=key)
 
-    from lib.db.vec import Vec
+    from amt_nano.db.vec import Vec
     vec = Vec(client)
     logger.debug(f"RAG query: {query}")
     msg = await vec.rag_chat(query)

@@ -1,16 +1,11 @@
 """
 MedGemma medical vision tools for MCP server - Medical image analysis using MedGemma-4B.
 """
-import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
 
 import requests
-
-# Add the project root to the path to import any MedGemma service
-project_root = Path(__file__).parent.parent.parent.parent.parent
-sys.path.insert(0, str(project_root))
 
 from settings import logger
 

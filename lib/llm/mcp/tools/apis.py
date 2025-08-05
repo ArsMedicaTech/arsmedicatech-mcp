@@ -1,13 +1,7 @@
 """
 API service tools for MCP server - Medline, ClinicalTrials, and NCBI integration.
 """
-import sys
-from pathlib import Path
 from typing import Any, Dict, List, Optional, TypedDict, Union
-
-# Add the project root to the path to import the API services
-project_root = Path(__file__).parent.parent.parent.parent.parent
-sys.path.insert(0, str(project_root))
 
 from amt_nano.services.apis import NCBI, ClinicalTrials, ICD10Code, Medline
 
@@ -174,15 +168,16 @@ def fetch_pubmed_studies(query: str, max_results: int = 10, include_abstracts: b
     
     Returns:
         Dictionary containing PubMed article data
-    """    
+    """
     try:
-        # Initialize NCBI service with placeholder credentials
-        # In a real implementation, these would be configured
+        # TODO: Pass these in via headers from frontend...
         ncbi_service = NCBI(
             email="user@example.com",
             logger=logger,
             api_key="your_api_key_here"
         )
+
+        raise NotImplementedError("NCBI service is not implemented yet")  # Placeholder for actual NCBI service implementation
         
         # Fetch studies
         articles = ncbi_service.fetch_ncbi_studies(query, debug=False)
@@ -246,13 +241,13 @@ def search_medical_literature(condition: str, max_results: int = 10) -> MedicalL
     # Fetch from ClinicalTrials.gov
     trials_result = fetch_clinical_trials(condition, max_results)
     results["sources"]["clinical_trials"] = trials_result
-    if "trials" in trials_result:
+    if "error" not in trials_result and "trials" in trials_result:
         results["summary"]["total_trials"] = len(trials_result["trials"])
     
     # Fetch from PubMed
     pubmed_result = fetch_pubmed_studies(condition, max_results)
     results["sources"]["pubmed"] = pubmed_result
-    if "articles" in pubmed_result:
+    if "error" not in pubmed_result and "articles" in pubmed_result:
         results["summary"]["total_articles"] = len(pubmed_result["articles"])
     
     # Count successful sources
@@ -326,13 +321,6 @@ def validate_icd10_code(icd10_code: str) -> Dict[str, Any]:
     Returns:
         Dictionary containing validation results
     """
-    if not ICD10Code:
-        return {
-            "code": icd10_code,
-            "is_valid": False,
-            "error": "ICD10Code class not available"
-        }
-    
     try:
         icd_code = ICD10Code(icd10_code)
         is_valid = icd_code.validate()
