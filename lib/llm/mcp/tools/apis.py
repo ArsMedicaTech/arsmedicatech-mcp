@@ -3,15 +3,15 @@ API service tools for MCP server - Medline, ClinicalTrials, and NCBI integration
 """
 import sys
 import time
-from typing import Any, Dict, List, Optional, Tuple
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 # Add the project root to the path to import the API services
 project_root = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 try:
-    from amt_nano.services.apis import Medline, ClinicalTrials, NCBI, ICD10Code
+    from amt_nano.services.apis import NCBI, ClinicalTrials, ICD10Code, Medline
 except ImportError:
     # Fallback for when the services are not available
     Medline = None

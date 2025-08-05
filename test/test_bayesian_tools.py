@@ -9,14 +9,10 @@ from pathlib import Path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-from lib.llm.mcp.tools.bayesian import (
-    call_bayesian_model,
-    predict_sepsis,
-    get_available_models,
-    validate_model_data,
-    batch_predict_sepsis,
-    get_model_schema
-)
+from lib.llm.mcp.tools.bayesian import (batch_predict_sepsis,
+                                        call_bayesian_model,
+                                        get_available_models, get_model_schema,
+                                        predict_sepsis, validate_model_data)
 
 
 def test_bayesian_tools():

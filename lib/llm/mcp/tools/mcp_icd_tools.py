@@ -7,12 +7,8 @@ from fastmcp import Context
 from mcp_init import mcp
 from pydantic import Field
 
-from .entities import (
-    predict_icd_codes,
-    extract_medical_entities,
-    get_icd_code_details,
-    validate_icd_code
-)
+from .entities import (extract_medical_entities, get_icd_code_details,
+                       predict_icd_codes, validate_icd_code)
 
 
 @mcp.tool

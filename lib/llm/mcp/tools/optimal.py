@@ -2,15 +2,16 @@
 Optimal Service tools for MCP server - Mathematical optimization as a service.
 """
 import sys
-from typing import Any, Dict, List, Optional, Union
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 
 # Add the project root to the path to import the Optimal service
 project_root = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 try:
-    from amt_nano.services.optimal import OptimalService, OptimalSchema, OptimalMetadata
+    from amt_nano.services.optimal import (OptimalMetadata, OptimalSchema,
+                                           OptimalService)
 except ImportError:
     # Fallback for when the service is not available
     OptimalService = None

@@ -7,11 +7,8 @@ from fastmcp import Context
 from mcp_init import mcp
 from pydantic import Field
 
-from .medgemma import (
-    analyze_medical_image,
-    batch_analyze_medical_images,
-    validate_medical_image_url
-)
+from .medgemma import (analyze_medical_image, batch_analyze_medical_images,
+                       validate_medical_image_url)
 
 
 @mcp.tool

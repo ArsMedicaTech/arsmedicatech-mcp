@@ -2,8 +2,8 @@
 ICD Autocoder tools for MCP server.
 """
 import sys
-from typing import Any, Dict, List
 from pathlib import Path
+from typing import Any, Dict, List
 
 # Add the project root to the path to import the ICD Autocoder service
 project_root = Path(__file__).parent.parent.parent.parent.parent
@@ -182,7 +182,7 @@ def validate_icd_code(icd_code: str) -> Dict[str, Any]:
         Dictionary containing validation results
     """
     import re
-    
+
     # Basic ICD-10 format validation
     icd_pattern = r'^[A-Z]\d{2}(\.\d{1,2})?$'
     is_valid_format = bool(re.match(icd_pattern, icd_code))

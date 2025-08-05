@@ -7,14 +7,9 @@ from fastmcp import Context
 from mcp_init import mcp
 from pydantic import Field
 
-from .apis import (
-    fetch_medline_info,
-    fetch_clinical_trials,
-    fetch_pubmed_studies,
-    search_medical_literature,
-    get_medical_evidence,
-    validate_icd10_code
-)
+from .apis import (fetch_clinical_trials, fetch_medline_info,
+                   fetch_pubmed_studies, get_medical_evidence,
+                   search_medical_literature, validate_icd10_code)
 
 
 @mcp.tool

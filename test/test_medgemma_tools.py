@@ -9,11 +9,9 @@ from pathlib import Path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-from lib.llm.mcp.tools.medgemma import (
-    analyze_medical_image,
-    batch_analyze_medical_images,
-    validate_medical_image_url
-)
+from lib.llm.mcp.tools.medgemma import (analyze_medical_image,
+                                        batch_analyze_medical_images,
+                                        validate_medical_image_url)
 
 
 def test_medgemma_tools():

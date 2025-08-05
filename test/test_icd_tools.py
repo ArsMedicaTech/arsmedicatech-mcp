@@ -9,12 +9,9 @@ from pathlib import Path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-from lib.llm.mcp.tools.entities import (
-    predict_icd_codes,
-    extract_medical_entities,
-    get_icd_code_details,
-    validate_icd_code
-)
+from lib.llm.mcp.tools.entities import (extract_medical_entities,
+                                        get_icd_code_details,
+                                        predict_icd_codes, validate_icd_code)
 
 
 def test_icd_tools():

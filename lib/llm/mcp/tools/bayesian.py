@@ -2,9 +2,10 @@
 Bayesian API tools for MCP server - Bayesian inference for medical models.
 """
 import sys
-import requests
-from typing import Any, Dict, List, Optional, Union
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
+
+import requests
 
 # Add the project root to the path to import any Bayesian service
 project_root = Path(__file__).parent.parent.parent.parent.parent

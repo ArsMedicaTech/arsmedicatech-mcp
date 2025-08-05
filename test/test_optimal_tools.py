@@ -9,14 +9,12 @@ from pathlib import Path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-from lib.llm.mcp.tools.optimal import (
-    create_linear_optimization_problem,
-    solve_optimization_problem,
-    create_portfolio_optimization,
-    create_resource_allocation_problem,
-    create_supply_chain_optimization,
-    validate_optimization_problem
-)
+from lib.llm.mcp.tools.optimal import (create_linear_optimization_problem,
+                                       create_portfolio_optimization,
+                                       create_resource_allocation_problem,
+                                       create_supply_chain_optimization,
+                                       solve_optimization_problem,
+                                       validate_optimization_problem)
 
 
 def test_optimal_tools():

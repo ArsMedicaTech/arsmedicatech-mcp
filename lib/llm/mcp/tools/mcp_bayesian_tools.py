@@ -7,14 +7,9 @@ from fastmcp import Context
 from mcp_init import mcp
 from pydantic import Field
 
-from .bayesian import (
-    call_bayesian_model,
-    predict_sepsis,
-    get_available_models,
-    validate_model_data,
-    batch_predict_sepsis,
-    get_model_schema
-)
+from .bayesian import (batch_predict_sepsis, call_bayesian_model,
+                       get_available_models, get_model_schema, predict_sepsis,
+                       validate_model_data)
 
 
 @mcp.tool
