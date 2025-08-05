@@ -32,25 +32,7 @@ def create_linear_optimization_problem(
     
     Returns:
         Dictionary containing the optimization problem schema
-    """
-    if not OptimalSchema:
-        logger.warning("Optimal service not available, returning placeholder schema")
-        return {
-            "meta": {
-                "problem_id": "linear_problem_001",
-                "solver": "linear_solver",
-                "sense": objective_type
-            },
-            "variables": variables,
-            "parameters": parameters or {},
-            "objective": {
-                "type": "linear",
-                "coefficients": [1.0] * len(variables)
-            },
-            "constraints": constraints,
-            "initial_guess": [0.0] * len(variables)
-        }
-    
+    """    
     try:
         # Create metadata
         meta = OptimalMetadata(
@@ -102,21 +84,7 @@ def solve_optimization_problem(
     
     Returns:
         Dictionary containing the optimization results
-    """
-    if not OptimalService or not OptimalSchema:
-        logger.warning("Optimal service not available, returning placeholder results")
-        return {
-            "status": "success",
-            "optimal_value": 42.0,
-            "optimal_variables": [1.0, 2.0, 3.0],
-            "solver_info": {
-                "solver": "placeholder_solver",
-                "iterations": 10,
-                "convergence": "optimal"
-            },
-            "message": "Placeholder results - Optimal service not available"
-        }
-    
+    """    
     try:
         # Reconstruct the schema objects
         meta = OptimalMetadata(

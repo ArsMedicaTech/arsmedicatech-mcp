@@ -1,14 +1,24 @@
 """
 ICD Autocoder tools for MCP server.
 """
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, TypedDict, Union
 
 from amt_nano.services.icd_autocoder_service import ICDAutoCoderService
 
 from settings import logger
 
 
-def predict_icd_codes(note_text: str, top_k: int = 5) -> Union[List[Dict[str, Any]], str]:
+class ICDCode(TypedDict):
+    code: str
+    name: str
+    text: str
+    cui: Optional[str]
+    start_char: int
+    end_char: int
+    confidence: float
+
+
+def predict_icd_codes(note_text: str, top_k: int = 5) -> Union[List[ICDCode], str]:
     """
     Map clinical free-text to ICD-10 codes using the ICD Autocoder service.
     
@@ -19,9 +29,6 @@ def predict_icd_codes(note_text: str, top_k: int = 5) -> Union[List[Dict[str, An
     Returns:
         List of dictionaries containing ICD codes and entity information
     """
-    if not ICDAutoCoderService:
-        logger.error("ICD Autocoder service not available, returning placeholder codes")
-        return "ICD Autocoder service not available"
     try:
         # Initialize the ICD Autocoder service
         service: ICDAutoCoderService = ICDAutoCoderService(note_text)
@@ -33,7 +40,7 @@ def predict_icd_codes(note_text: str, top_k: int = 5) -> Union[List[Dict[str, An
         icd_entities = result.get("icd_codes", [])
         
         # Format the results
-        formatted_results: List[Dict[str, Any]] = []
+        formatted_results: List[ICDCode] = []
         for entity in icd_entities[:top_k]:
             if entity.get("icd10cm"):
                 formatted_results.append({
@@ -58,23 +65,26 @@ def predict_icd_codes(note_text: str, top_k: int = 5) -> Union[List[Dict[str, An
         return f"Error in ICD code prediction: {e}"
 
 
-def extract_medical_entities(note_text: str) -> List[Dict[str, Any]]:
+class MedicalEntity(TypedDict):
+    text: str
+    label: str
+    start_char: int
+    end_char: int
+    cui: Optional[str]
+    icd10cm: Optional[str]
+    icd10cm_name: Optional[str]
+    confidence: float
+
+def extract_medical_entities(note_text: str) -> List[MedicalEntity]:
     """
     Extract medical entities from clinical text using the ICD Autocoder service.
-    
+
     Args:
         note_text: Clinical note or summary text
-    
+
     Returns:
         List of dictionaries containing extracted medical entities with positions
-    """
-    if not ICDAutoCoderService:
-        logger.warning("ICD Autocoder service not available, returning placeholder entities")
-        return [
-            {"text": "diabetes", "label": "DISEASE", "start_char": 0, "end_char": 8, "cui": None},
-            {"text": "hypertension", "label": "DISEASE", "start_char": 10, "end_char": 22, "cui": None}
-        ]
-    
+    """    
     try:
         # Initialize the ICD Autocoder service
         service = ICDAutoCoderService(note_text)
@@ -86,7 +96,7 @@ def extract_medical_entities(note_text: str) -> List[Dict[str, Any]]:
         entities = result.get("normalized_entities", [])
         
         # Format the results
-        formatted_entities: List[Dict[str, Any]] = []
+        formatted_entities: List[MedicalEntity] = []
         for entity in entities:
             formatted_entities.append({
                 "text": entity.get("text", ""),
@@ -95,7 +105,8 @@ def extract_medical_entities(note_text: str) -> List[Dict[str, Any]]:
                 "end_char": entity.get("end_char", 0),
                 "cui": entity.get("cui"),
                 "icd10cm": entity.get("icd10cm"),
-                "icd10cm_name": entity.get("icd10cm_name")
+                "icd10cm_name": entity.get("icd10cm_name"),
+                "confidence": 0.9 if entity.get("cui") else 0.7  # Higher confidence if UMLS CUI is available
             })
         
         return formatted_entities
@@ -105,7 +116,14 @@ def extract_medical_entities(note_text: str) -> List[Dict[str, Any]]:
         return []
 
 
-def get_icd_code_details(icd_code: str) -> Dict[str, Any]:
+class ICDCodeDetails(TypedDict):
+    code: str
+    name: str
+    category: str
+    block: str
+    chapter: str
+
+def get_icd_code_details(icd_code: str) -> ICDCodeDetails:
     """
     Get detailed information about a specific ICD-10 code.
     
@@ -117,7 +135,7 @@ def get_icd_code_details(icd_code: str) -> Dict[str, Any]:
     """
     # This is a placeholder implementation
     # In a real implementation, you would query a medical database or API
-    icd_details = {
+    icd_details: Dict[str, ICDCodeDetails] = {
         "E11.9": {
             "code": "E11.9",
             "name": "Type 2 diabetes mellitus without complications",

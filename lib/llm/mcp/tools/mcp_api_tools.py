@@ -1,15 +1,18 @@
 """
 MCP tool registration for API service functions.
 """
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 from fastmcp import Context
-from mcp_init import mcp
+from mcp_init import mcp  # type: ignore
 from pydantic import Field
 
-from .apis import (fetch_clinical_trials, fetch_medline_info,
-                   fetch_pubmed_studies, get_medical_evidence,
-                   search_medical_literature, validate_icd10_code)
+from .apis import (ClinicalTrialsError, ClinicalTrialsResult, Evidence,
+                   MedicalLiteratureSearchResult, PubMedSearchError,
+                   PubMedSearchResult, fetch_clinical_trials,
+                   fetch_medline_info, fetch_pubmed_studies,
+                   get_medical_evidence, search_medical_literature,
+                   validate_icd10_code)
 
 
 @mcp.tool
@@ -28,7 +31,7 @@ async def fetch_clinical_trials_tool(
     condition: str = Field(description="Medical condition or disease to search for"),
     max_results: int = Field(default=10, ge=1, le=50, description="Maximum number of trials to return"),
     ctx: Optional[Context] = None
-) -> Dict[str, Any]:
+) -> Union[ClinicalTrialsResult, ClinicalTrialsError]:
     """
     Fetch clinical trial data from ClinicalTrials.gov.
     """
@@ -41,7 +44,7 @@ async def fetch_pubmed_studies_tool(
     max_results: int = Field(default=10, ge=1, le=50, description="Maximum number of articles to return"),
     include_abstracts: bool = Field(default=False, description="Whether to include article abstracts"),
     ctx: Optional[Context] = None
-) -> Dict[str, Any]:
+) -> Union[PubMedSearchResult, PubMedSearchError]:
     """
     Fetch medical studies and articles from NCBI's PubMed database.
     """
@@ -53,7 +56,7 @@ async def search_medical_literature_tool(
     condition: str = Field(description="Medical condition or disease to search for"),
     max_results: int = Field(default=10, ge=1, le=50, description="Maximum number of results per source"),
     ctx: Optional[Context] = None
-) -> Dict[str, Any]:
+) -> MedicalLiteratureSearchResult:
     """
     Comprehensive search across multiple medical literature sources.
     """
@@ -65,7 +68,7 @@ async def get_medical_evidence_tool(
     icd10_code: str = Field(description="ICD-10 code for the condition"),
     condition: str = Field(description="Human-readable condition name"),
     ctx: Optional[Context] = None
-) -> Dict[str, Any]:
+) -> Evidence:
     """
     Get comprehensive medical evidence for a condition including Medline info and literature.
     """

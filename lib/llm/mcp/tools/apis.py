@@ -92,34 +92,6 @@ def fetch_clinical_trials(condition: str, max_results: int = 10) -> Union[Clinic
     Returns:
         Dictionary containing clinical trial data
     """
-    if not ClinicalTrials:
-        logger.warning("ClinicalTrials service not available, returning placeholder data")
-        return {
-            "trials": [
-                {
-                    "nct_id": "NCT12345678",
-                    "title": "Study of New Treatment for Diabetes",
-                    "condition": condition,
-                    "status": "Recruiting",
-                    "phase": "Phase 2",
-                    "enrollment": "100 participants",
-                    "location": [
-                        {
-                            "facility": "Sample Hospital",
-                            "city": "Sample City",
-                            "country": "Sample Country"
-                        }
-                    ],
-                    "sponsor": "Sample Sponsor",
-                    "start_date": "2024-01-01",
-                    "completion_date": "2025-01-01"
-                }
-            ],
-            "total_count": 1,
-            "condition": condition,
-            "source": "ClinicalTrials.gov"
-        }
-    
     try:
         # Initialize ClinicalTrials service
         trials_service = ClinicalTrials(logger)
@@ -202,25 +174,7 @@ def fetch_pubmed_studies(query: str, max_results: int = 10, include_abstracts: b
     
     Returns:
         Dictionary containing PubMed article data
-    """
-    if not NCBI:
-        logger.warning("NCBI service not available, returning placeholder data")
-        return {
-            "articles": [
-                {
-                    "pmid": "12345678",
-                    "title": "Recent Advances in Diabetes Treatment",
-                    "journal": "Journal of Medical Research",
-                    "authors": "Smith J, Johnson A, Brown K",
-                    "pubdate": "2024",
-                    "abstract": "This study examines new treatment approaches for diabetes management."
-                }
-            ],
-            "total_count": 1,
-            "query": query,
-            "source": "PubMed"
-        }
-    
+    """    
     try:
         # Initialize NCBI service with placeholder credentials
         # In a real implementation, these would be configured
