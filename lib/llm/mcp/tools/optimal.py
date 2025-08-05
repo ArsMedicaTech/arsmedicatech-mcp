@@ -383,9 +383,12 @@ def create_supply_chain_optimization(
     # Supplier capacity constraints
     for supplier in suppliers:
         capacity = supplier_capacities.get(supplier, 1000.0)
+        # Build the sum expression for all warehouses
+        warehouse_terms = [f"flow_supplier_{supplier}_warehouse_{w}" for w in warehouses]
+        sum_expression = " + ".join(warehouse_terms)
         constraint = {
             "type": "inequality",
-            "expression": f"sum(flow_supplier_{supplier}_warehouse_{w} for w in warehouses) <= {capacity}",
+            "expression": f"{sum_expression} <= {capacity}",
             "description": f"Supplier {supplier} capacity constraint"
         }
         constraints.append(constraint)
@@ -393,9 +396,12 @@ def create_supply_chain_optimization(
     # Warehouse capacity constraints
     for warehouse in warehouses:
         capacity = warehouse_capacities.get(warehouse, 1000.0)
+        # Build the sum expression for all customers
+        customer_terms = [f"flow_warehouse_{warehouse}_customer_{c}" for c in customers]
+        sum_expression = " + ".join(customer_terms)
         constraint = {
             "type": "inequality",
-            "expression": f"sum(flow_warehouse_{warehouse}_customer_{c} for c in customers) <= {capacity}",
+            "expression": f"{sum_expression} <= {capacity}",
             "description": f"Warehouse {warehouse} capacity constraint"
         }
         constraints.append(constraint)
@@ -403,9 +409,12 @@ def create_supply_chain_optimization(
     # Customer demand constraints
     for customer in customers:
         demand = customer_demands.get(customer, 0.0)
+        # Build the sum expression for all warehouses
+        warehouse_terms = [f"flow_warehouse_{w}_customer_{customer}" for w in warehouses]
+        sum_expression = " + ".join(warehouse_terms)
         constraint = {
             "type": "equality",
-            "expression": f"sum(flow_warehouse_{w}_customer_{customer} for w in warehouses) = {demand}",
+            "expression": f"{sum_expression} = {demand}",
             "description": f"Customer {customer} demand constraint"
         }
         constraints.append(constraint)
