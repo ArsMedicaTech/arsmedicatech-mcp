@@ -4,9 +4,9 @@ MCP tool registration for MedGemma medical vision functions.
 from typing import Any, Dict, List, Optional
 
 from fastmcp import Context
-from mcp_init import mcp  # type: ignore
 from pydantic import Field
 
+from .mcp_icd_tools import mcp  # type: ignore
 from .medgemma import (analyze_medical_image, batch_analyze_medical_images,
                        validate_medical_image_url)
 

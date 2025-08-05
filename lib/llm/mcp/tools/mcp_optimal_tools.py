@@ -4,9 +4,9 @@ MCP tool registration for Optimal service functions.
 from typing import Any, Dict, List, Optional
 
 from fastmcp import Context
-from mcp_init import mcp  # type: ignore
 from pydantic import Field
 
+from .mcp_medgemma_tools import mcp  # type: ignore
 from .optimal import (create_linear_optimization_problem,
                       create_portfolio_optimization,
                       create_resource_allocation_problem,

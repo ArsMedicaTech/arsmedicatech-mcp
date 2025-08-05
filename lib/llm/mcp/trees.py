@@ -7,8 +7,8 @@ import re
 from typing import Annotated, Any, Callable, Dict, Tuple, Union
 
 from fastmcp import Context
-from mcp_init import mcp  # type: ignore
 from pydantic import Field
+from tools.mcp_optimal_tools import mcp  # type: ignore
 
 from settings import logger
 

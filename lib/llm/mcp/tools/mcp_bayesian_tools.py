@@ -4,12 +4,12 @@ MCP tool registration for Bayesian API functions.
 from typing import Any, Dict, List, Optional
 
 from fastmcp import Context
-from mcp_init import mcp  # type: ignore
 from pydantic import Field
 
 from .bayesian import (batch_predict_sepsis, call_bayesian_model,
                        get_available_models, get_model_schema, predict_sepsis,
                        validate_model_data)
+from .mcp_api_tools import mcp  # type: ignore
 
 
 @mcp.tool

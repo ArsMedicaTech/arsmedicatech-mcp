@@ -4,12 +4,12 @@ MCP tool registration for ICD Autocoder functions.
 from typing import Any, Dict, List, Optional, Union
 
 from fastmcp import Context
-from mcp_init import mcp  # type: ignore
 from pydantic import Field
 
 from .entities import (ICDCode, ICDCodeDetails, MedicalEntity,
                        extract_medical_entities, get_icd_code_details,
                        predict_icd_codes, validate_icd_code)
+from .mcp_bayesian_tools import mcp  # type: ignore
 
 
 @mcp.tool
