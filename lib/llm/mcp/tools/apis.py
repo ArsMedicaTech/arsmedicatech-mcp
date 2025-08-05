@@ -1,9 +1,10 @@
 """
 API service tools for MCP server - Medline, ClinicalTrials, and NCBI integration.
 """
-from typing import Any, Dict, List, Optional, TypedDict, Union
+from typing import Any, Dict, List, Optional, Union
 
 from amt_nano.services.apis import NCBI, ClinicalTrials, ICD10Code, Medline
+from typing_extensions import TypedDict
 
 from settings import logger
 

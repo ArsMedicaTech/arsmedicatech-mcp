@@ -1,9 +1,10 @@
 """
 ICD Autocoder tools for MCP server.
 """
-from typing import Any, Dict, List, Optional, TypedDict, Union
+from typing import Any, Dict, List, Optional, Union
 
 from amt_nano.services.icd_autocoder_service import ICDAutoCoderService
+from typing_extensions import TypedDict
 
 from settings import logger
 
