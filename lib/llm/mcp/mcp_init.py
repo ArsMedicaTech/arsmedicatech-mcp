@@ -1,6 +1,7 @@
 """
 ArsMedicaTech MCP Server Initialization
 """
+
 import json
 
 from amt_nano.services.encryption import get_encryption_service
@@ -31,7 +32,7 @@ async def health_check(request: Request) -> PlainTextResponse:
     client_host: str = "unknown"
     if request.client is not None:
         client_host = request.client.host
-    logger.debug(f'Health check received from {client_host}')
+    logger.debug(f"Health check received from {client_host}")
     logger.debug(str(request.__dir__()))
     return PlainTextResponse("OK")
 
@@ -44,6 +45,7 @@ def hello(name: str = "world") -> str:
     :return: JSON string containing the greeting message.
     """
     return json.dumps(dict(msg=f"Hello, {name}!"))
+
 
 # register_openai_tool(mcp, blood_pressure_decision_tree_lookup, tool_definition_bp)
 
@@ -58,7 +60,7 @@ async def rag(query: str) -> str:
     req: Request = get_http_request()
 
     enc_key = req.headers.get("x-session-token")
-    logger.debug('ACTUAL HEADERS:', req.headers, req.headers.__dir__())
+    logger.debug("ACTUAL HEADERS:", req.headers, req.headers.__dir__())
     logger.debug(f"===> Encrypted key from context: {enc_key}")
     if not enc_key:
         raise ValueError("No encrypted key provided in header.")
@@ -73,6 +75,7 @@ async def rag(query: str) -> str:
     client = AsyncOpenAI(api_key=key)
 
     from amt_nano.db.vec import Vec
+
     vec = Vec(client)
     logger.debug(f"RAG query: {query}")
     msg = await vec.rag_chat(query)
