@@ -82,6 +82,35 @@ def decision_tree_lookup(tree: Dict[str, Any], **kwargs: Any) -> Dict[str, Any]:
         branches: Dict[BranchKey, Any] = branches  # type: ignore
         matched = False
 
+        # Priority 1: Use a context_key lambda for complex logic
+        if "context_key" in current_node and callable(current_node["context_key"]):
+            evaluator = current_node["context_key"]
+            arg_to_test = evaluator(kwargs)
+            key, path_taken = _choose_branch(
+                branches, arg_to_test, question, path_taken
+            )
+            if key is not None:
+                current_node = branches[key]
+                matched = True
+
+        # Priority 2: Use an explicit 'variable' name for direct lookups
+        elif "variable" in current_node:
+            var_name = current_node["variable"]
+            if var_name not in kwargs:
+                return {
+                    "decision": "Error",
+                    "reason": f"Missing required argument '{var_name}'.",
+                    "path_taken": path_taken,
+                }
+            arg_to_test = kwargs[var_name]
+            key, path_taken = _choose_branch(
+                branches, arg_to_test, var_name.replace("_", " "), path_taken
+            )
+            if key is not None:
+                current_node = branches[key]
+                matched = True
+
+        # Fallback for legacy trees: Match question text to kwarg names
         for kw_name, value in kwargs.items():
             subterm = kw_name.replace(
                 "_", " "
