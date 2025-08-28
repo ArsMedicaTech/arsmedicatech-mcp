@@ -97,7 +97,17 @@ def atrial_fibrillation_decision_tree_lookup(
         A dictionary containing the final recommendation and the logical path taken.
     """
     # Implementation goes here
-    pass
+    return decision_tree_lookup(
+        ATRIAL_FIBRILLATION_TREE,
+        systolic_blood_pressure=systolic_blood_pressure,
+        diastolic_blood_pressure=diastolic_blood_pressure,
+        heart_rate=heart_rate,
+        decompensated_heart_failure=decompensated_heart_failure,
+        beta_blockers_contraindicated=beta_blockers_contraindicated,
+        digoxin_contraindicated=digoxin_contraindicated,
+        amiodarone_contraindicated=amiodarone_contraindicated,
+        ctx=ctx,
+    )
 
 
 tool_definition_af: Dict[str, Any] = {
