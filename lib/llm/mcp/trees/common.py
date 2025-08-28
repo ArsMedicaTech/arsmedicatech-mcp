@@ -111,21 +111,24 @@ def decision_tree_lookup(tree: Dict[str, Any], **kwargs: Any) -> Dict[str, Any]:
                 matched = True
 
         # Fallback for legacy trees: Match question text to kwarg names
-        for kw_name, value in kwargs.items():
-            subterm = kw_name.replace(
-                "_", " "
-            )  # crude NLP: map loan_purpose → "loan purpose"
-            if subterm in question:
-                key, path_taken = _choose_branch(branches, value, subterm, path_taken)
-                if key is None:
-                    return {
-                        "decision": "Error",
-                        "reason": f"Invalid value for {subterm}: {value!r}",
-                        "path_taken": path_taken,
-                    }
-                current_node = branches[key]
-                matched = True
-                break
+        if not matched:
+            for kw_name, value in kwargs.items():
+                subterm = kw_name.replace(
+                    "_", " "
+                )  # crude NLP: map loan_purpose → "loan purpose"
+                if subterm in question:
+                    key, path_taken = _choose_branch(
+                        branches, value, subterm, path_taken
+                    )
+                    if key is None:
+                        return {
+                            "decision": "Error",
+                            "reason": f"Invalid value for {subterm}: {value!r}",
+                            "path_taken": path_taken,
+                        }
+                    current_node = branches[key]
+                    matched = True
+                    break
 
         if not matched:
             return {
