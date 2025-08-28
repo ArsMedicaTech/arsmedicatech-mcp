@@ -7,7 +7,7 @@ Example uses of decision tree functions.
 import enum
 from typing import Any, Dict
 
-from lib.llm.mcp.trees import decision_tree_lookup
+from lib.llm.mcp.trees.common import decision_tree_lookup
 
 LOAN_DECISION_TREE: Dict[str, Any] = {
     "question": "What is your credit score?",

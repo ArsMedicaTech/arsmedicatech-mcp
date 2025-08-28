@@ -7,10 +7,13 @@ Atrial fibrillation (AFib) decision tree for determining appropriate management 
 #  (adapted from 2023 AHA/ACC/ACCP/HRS guideline)
 # ───────────────────────────────────────────────────────────
 
-from contextvars import Context
 from typing import Annotated, Any, Dict
 
+from fastmcp import Context
 from pydantic import Field
+
+from lib.llm.mcp.mcp_init import mcp
+from lib.llm.mcp.trees.common import decision_tree_lookup
 
 ATRIAL_FIBRILLATION_TREE: Dict[str, Any] = {
     "question": "Hemodynamically stable?",
