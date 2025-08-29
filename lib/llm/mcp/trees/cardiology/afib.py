@@ -17,21 +17,26 @@ from lib.llm.mcp.trees.common import decision_tree_lookup
 
 ATRIAL_FIBRILLATION_TREE: Dict[str, Any] = {
     "question": "Hemodynamically stable?",
+    "variable": "hemodynamic_stability",
     "branches": {
         ("==", False): "Direct current cardioversion (1)",
         ("==", True): {
             "question": "Decompensated HF?",
+            "variable": "decompensated_heart_failure",
             "branches": {
                 ("==", False): {
                     "question": "Are beta blockers, verapamil, or diltiazem (1) contraindicated?",
+                    "variable": "beta_blockers_contraindicated",
                     "branches": {
                         ("==", False): "Continue current medications.",
                         ("==", True): {
                             "question": "Is Digoxin (2a) contraindicated?",
+                            "variable": "digoxin_contraindicated",
                             "branches": {
                                 ("==", False): "Digoxin",
                                 ("==", True): {
                                     "question": "Is Amiodarone (2b) contraindicated?",
+                                    "variable": "amiodarone_contraindicated",
                                     "branches": {
                                         ("==", False): "Amiodarone",
                                         ("==", True): "Consider alternative therapies.",
@@ -43,6 +48,7 @@ ATRIAL_FIBRILLATION_TREE: Dict[str, Any] = {
                 },
                 ("==", True): {
                     "question": "Is IV Amiodarone (2b) contraindicated?",
+                    "variable": "amiodarone_contraindicated",
                     "branches": {
                         ("==", False): "IV Amiodarone",
                         ("==", True): "That leaves Verapamil, diltiazem (3: Harm)",
