@@ -154,12 +154,45 @@ tool_definition_af: Dict[str, Any] = {
         "parameters": {
             "type": "object",
             "properties": {
-                "ctx": {
-                    "type": "object",
-                    "description": "The context for the lookup.",
+                "systolic_blood_pressure": {
+                    "type": "integer",
+                    "description": "The patient's systolic blood pressure, e.g., 128",
+                },
+                "diastolic_blood_pressure": {
+                    "type": "integer",
+                    "description": "The patient's diastolic blood pressure, e.g., 78",
+                },
+                "heart_rate": {
+                    "type": "integer",
+                    "description": "The patient's heart rate, e.g., 75",
+                },
+                "hemodynamic_stability": {
+                    "type": ["boolean", "null"],
+                    "description": "Is the patient hemodynamically stable?",
+                },
+                "decompensated_heart_failure": {
+                    "type": "boolean",
+                    "description": "Is the patient in decompensated heart failure?",
+                },
+                "beta_blockers_contraindicated": {
+                    "type": "boolean",
+                    "description": "Are beta blockers, verapamil, or diltiazem contraindicated?",
+                },
+                "digoxin_contraindicated": {
+                    "type": "boolean",
+                    "description": "Is Digoxin contraindicated?",
+                },
+                "amiodarone_contraindicated": {
+                    "type": "boolean",
+                    "description": "Is Amiodarone contraindicated?",
                 },
             },
-            "required": ["ctx"],
+            "required": [
+                "decompensated_heart_failure",
+                "beta_blockers_contraindicated",
+                "digoxin_contraindicated",
+                "amiodarone_contraindicated",
+            ],
         },
     },
 }
