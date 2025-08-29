@@ -7,12 +7,13 @@ Atrial fibrillation (AFib) decision tree for determining appropriate management 
 #  (adapted from 2023 AHA/ACC/ACCP/HRS guideline)
 # ───────────────────────────────────────────────────────────
 
-from typing import Annotated, Any, Dict
+from typing import Annotated, Any, Dict, Optional
 
 from fastmcp import Context
 from pydantic import Field
 
 from lib.llm.mcp.mcp_init import mcp
+from lib.llm.mcp.trees.cardiology.helpers import hemodynamic_stability_check
 from lib.llm.mcp.trees.common import decision_tree_lookup
 
 ATRIAL_FIBRILLATION_TREE: Dict[str, Any] = {
@@ -69,6 +70,9 @@ def atrial_fibrillation_decision_tree_lookup(
         int, Field(description="The patient's diastolic blood pressure, e.g., 78")
     ],
     heart_rate: Annotated[int, Field(description="The patient's heart rate, e.g., 75")],
+    hemodynamic_stability: Annotated[
+        Optional[bool], Field(description="Is the patient hemodynamically stable?")
+    ],
     decompensated_heart_failure: Annotated[
         bool, Field(description="Is the patient in decompensated heart failure?")
     ],
@@ -93,6 +97,7 @@ def atrial_fibrillation_decision_tree_lookup(
         systolic_blood_pressure: The patient's systolic blood pressure.
         diastolic_blood_pressure: The patient's diastolic blood pressure.
         heart_rate: The patient's heart rate.
+        hemodynamic_stability: Is the patient hemodynamically stable?
         decompensated_heart_failure: Is the patient in decompensated heart failure?
         beta_blockers_contraindicated: Are beta blockers, verapamil, or diltiazem contraindicated?
         digoxin_contraindicated: Is Digoxin contraindicated?
@@ -102,12 +107,20 @@ def atrial_fibrillation_decision_tree_lookup(
     Returns:
         A dictionary containing the final recommendation and the logical path taken.
     """
-    # Implementation goes here
+
+    hemodynamic_stability_flag = (
+        hemodynamic_stability
+        if isinstance(hemodynamic_stability, bool)
+        else hemodynamic_stability_check(
+            systolic=systolic_blood_pressure,
+            diastolic=diastolic_blood_pressure,
+            heart_rate=heart_rate,
+        )
+    )
+
     return decision_tree_lookup(
         ATRIAL_FIBRILLATION_TREE,
-        systolic_blood_pressure=systolic_blood_pressure,
-        diastolic_blood_pressure=diastolic_blood_pressure,
-        heart_rate=heart_rate,
+        hemodynamic_stability=hemodynamic_stability_flag,
         decompensated_heart_failure=decompensated_heart_failure,
         beta_blockers_contraindicated=beta_blockers_contraindicated,
         digoxin_contraindicated=digoxin_contraindicated,

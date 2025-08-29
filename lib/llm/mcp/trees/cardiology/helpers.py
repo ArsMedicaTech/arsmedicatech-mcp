@@ -17,7 +17,7 @@ def mean_arterial_pressure(systolic: int, diastolic: int) -> float:
     return ((2 * diastolic) + systolic) / 3
 
 
-def hemodynamic_stability(systolic: int, diastolic: int, heart_rate: int) -> bool:
+def hemodynamic_stability_check(systolic: int, diastolic: int, heart_rate: int) -> bool:
     """
     Determines if the patient is hemodynamically stable based on the context.
 
