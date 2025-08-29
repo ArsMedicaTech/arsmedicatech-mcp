@@ -64,12 +64,16 @@ ATRIAL_FIBRILLATION_TREE: Dict[str, Any] = {
 @mcp.tool
 def atrial_fibrillation_decision_tree_lookup(
     systolic_blood_pressure: Annotated[
-        int, Field(description="The patient's systolic blood pressure, e.g., 128")
+        Optional[int],
+        Field(description="The patient's systolic blood pressure, e.g., 128"),
     ],
     diastolic_blood_pressure: Annotated[
-        int, Field(description="The patient's diastolic blood pressure, e.g., 78")
+        Optional[int],
+        Field(description="The patient's diastolic blood pressure, e.g., 78"),
     ],
-    heart_rate: Annotated[int, Field(description="The patient's heart rate, e.g., 75")],
+    heart_rate: Annotated[
+        Optional[int], Field(description="The patient's heart rate, e.g., 75")
+    ],
     hemodynamic_stability: Annotated[
         Optional[bool], Field(description="Is the patient hemodynamically stable?")
     ],
@@ -105,16 +109,31 @@ def atrial_fibrillation_decision_tree_lookup(
     Returns:
         A dictionary containing the final recommendation and the logical path taken.
     """
+    if hemodynamic_stability is None and (
+        systolic_blood_pressure is None
+        and diastolic_blood_pressure is None
+        and heart_rate is None
+    ):
+        raise ValueError(
+            "If hemodynamic stability is unknown, all vital signs must be provided."
+        )
 
-    hemodynamic_stability_flag = (
-        hemodynamic_stability
-        if isinstance(hemodynamic_stability, bool)
-        else hemodynamic_stability_check(
+    if not isinstance(hemodynamic_stability, bool):
+        if (
+            systolic_blood_pressure is None
+            or diastolic_blood_pressure is None
+            or heart_rate is None
+        ):
+            raise ValueError(
+                "All vital signs (systolic_blood_pressure, diastolic_blood_pressure, heart_rate) must be provided to assess hemodynamic stability."
+            )
+        hemodynamic_stability_flag = hemodynamic_stability_check(
             systolic=systolic_blood_pressure,
             diastolic=diastolic_blood_pressure,
             heart_rate=heart_rate,
         )
-    )
+    else:
+        hemodynamic_stability_flag = hemodynamic_stability
 
     return decision_tree_lookup(
         ATRIAL_FIBRILLATION_TREE,
