@@ -9,7 +9,6 @@ Atrial fibrillation (AFib) decision tree for determining appropriate management 
 
 from typing import Annotated, Any, Dict, Optional
 
-from fastmcp import Context
 from pydantic import Field
 
 from lib.llm.mcp.mcp_init import mcp
@@ -90,7 +89,6 @@ def atrial_fibrillation_decision_tree_lookup(
     amiodarone_contraindicated: Annotated[
         bool, Field(description="Is Amiodarone contraindicated?")
     ],
-    ctx: Context,
 ) -> Dict[str, Any]:
     """
     Looks up a treatment recommendation for atrial fibrillation from a decision tree.
@@ -101,10 +99,9 @@ def atrial_fibrillation_decision_tree_lookup(
         heart_rate: The patient's heart rate.
         hemodynamic_stability: Is the patient hemodynamically stable?
         decompensated_heart_failure: Is the patient in decompensated heart failure?
-        beta_blockers_contraindicated: Are beta blockers, verapamil, or diltiazem contraindicated?
+        beta_blockers_contraindicated: Are beta blockers contraindicated?
         digoxin_contraindicated: Is Digoxin contraindicated?
         amiodarone_contraindicated: Is Amiodarone contraindicated?
-        ctx: The context for the lookup.
 
     Returns:
         A dictionary containing the final recommendation and the logical path taken.
@@ -142,7 +139,6 @@ def atrial_fibrillation_decision_tree_lookup(
         beta_blockers_contraindicated=beta_blockers_contraindicated,
         digoxin_contraindicated=digoxin_contraindicated,
         amiodarone_contraindicated=amiodarone_contraindicated,
-        ctx=ctx,
     )
 
 
