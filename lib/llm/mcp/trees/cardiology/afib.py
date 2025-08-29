@@ -78,9 +78,7 @@ def atrial_fibrillation_decision_tree_lookup(
     ],
     beta_blockers_contraindicated: Annotated[
         bool,
-        Field(
-            description="Are beta blockers, verapamil, or diltiazem contraindicated?"
-        ),
+        Field(description="Are beta blockers contraindicated?"),
     ],
     digoxin_contraindicated: Annotated[
         bool, Field(description="Is Digoxin contraindicated?")
