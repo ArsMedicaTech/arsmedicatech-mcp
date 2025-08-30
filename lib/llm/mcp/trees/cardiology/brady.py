@@ -411,3 +411,120 @@ AV_BLOCK_TREE: Dict[str, Any] = {
         },
     },
 }
+
+ACUTE_BRADYCARDIA: Dict[str, Any] = {
+    "question": "After an initial stability assessment and treatment of reversible causes, does the patient with acute bradycardia have moderate or severe symptoms?",
+    "branches": {
+        "== True": {
+            "question": "After administration of Atropine, is the bradycardia suspected to be due to drug toxicity?",
+            "branches": {
+                "== True": {
+                    "question": "What is the suspected type of drug toxicity?",
+                    "branches": {
+                        "== 'Calcium channel blocker'": {
+                            "question": "After administering IV Calcium (COR IIa) followed by High dose Insulin (COR IIa), do symptoms continue?",
+                            "branches": {
+                                "== True": {
+                                    "question": "Is the patient now hemodynamically unstable or having severe symptoms?",
+                                    "branches": {
+                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                        "== False": {
+                                            "question": "Is there a Myocardial Infarction (MI) with AV Block?",
+                                            "branches": {
+                                                "== True": "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
+                                                "== False": {
+                                                    "question": "After administering Beta-agonists (COR IIb), do symptoms continue?",
+                                                    "branches": {
+                                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                                        "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                            },
+                        },
+                        "== 'Beta blocker'": {
+                            "question": "After administering IV Glucagon (COR IIa) followed by High dose Insulin (COR IIa), do symptoms continue?",
+                            "branches": {
+                                "== True": {
+                                    "question": "Is the patient now hemodynamically unstable or having severe symptoms?",
+                                    "branches": {
+                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                        "== False": {
+                                            "question": "Is there a Myocardial Infarction (MI) with AV Block?",
+                                            "branches": {
+                                                "== True": "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
+                                                "== False": {
+                                                    "question": "After administering Beta-agonists (COR IIb), do symptoms continue?",
+                                                    "branches": {
+                                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                                        "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                            },
+                        },
+                        "== 'Digoxin'": {
+                            "question": "After administering Anti-digoxin Fab (COR IIa), do symptoms continue?",
+                            "branches": {
+                                "== True": {
+                                    "question": "Is the patient now hemodynamically unstable or having severe symptoms?",
+                                    "branches": {
+                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                        "== False": {
+                                            "question": "Is there a Myocardial Infarction (MI) with AV Block?",
+                                            "branches": {
+                                                "== True": "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
+                                                "== False": {
+                                                    "question": "After administering Beta-agonists (COR IIb), do symptoms continue?",
+                                                    "branches": {
+                                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                                        "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                            },
+                        },
+                    },
+                },
+                "== False": {
+                    "question": "Do symptoms continue?",
+                    "branches": {
+                        "== True": {
+                            "question": "Is the patient now hemodynamically unstable or having severe symptoms?",
+                            "branches": {
+                                "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                "== False": {
+                                    "question": "Is there a Myocardial Infarction (MI) with AV Block?",
+                                    "branches": {
+                                        "== True": "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
+                                        "== False": {
+                                            "question": "After administering Beta-agonists (COR IIb), do symptoms continue?",
+                                            "branches": {
+                                                "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                                "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                    },
+                },
+            },
+        },
+        "== False": "OUTCOME: Evaluation and observation.",
+    },
+}
