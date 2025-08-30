@@ -237,3 +237,177 @@ SND_TREE: Dict[str, Any] = {
         },
     },
 }
+
+AV_BLOCK_TREE: Dict[str, Any] = {
+    "question": "Is the atrioventricular (AV) block due to a reversible or physiologic cause?",
+    "branches": {
+        "== True": {
+            "question": "After treating the underlying cause (Class I), is the treatment effective or unnecessary?",
+            "branches": {
+                "== True": "OUTCOME: Observe.",
+                "== False": {
+                    "question": "Is the block a Mobitz Type II 2°, Advanced, or Complete Heart Block?",
+                    "branches": {
+                        "== True": {
+                            "question": "Following a transthoracic echocardiogram (Class I), is there suspicion for infiltrative cardiomyopathy, endocarditis, or ACHD?",
+                            "branches": {
+                                "== True": "OUTCOME: Perform Advanced Imaging (Class IIa), then proceed to the AV block treatment algorithm†.",
+                                "== False": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                            },
+                        },
+                        "== False": {
+                            "question": "Is there a suspicion for structural heart disease?",
+                            "branches": {
+                                "== True": {
+                                    "question": "After performing an echocardiogram, treating abnormalities, and considering advanced imaging, what is the determined site of the AV Block?",
+                                    "branches": {
+                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                        "== 'AV node (Mobitz Type I)'": {
+                                            "question": "Does the patient have symptoms?",
+                                            "branches": {
+                                                "== True": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                "== False": "OUTCOME: Observe.",
+                                            },
+                                        },
+                                        "== 'Unclear (e.g., 2:1 AV Block)'": {
+                                            "question": "Does the patient have symptoms?",
+                                            "branches": {
+                                                "== True": {
+                                                    "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
+                                                    "branches": {
+                                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                        "== 'AV node'": "OUTCOME: Observe.",
+                                                    },
+                                                },
+                                                "== False": {
+                                                    "question": "What does Exercise testing (Class IIa) show as the site of the block?",
+                                                    "branches": {
+                                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                        "== 'AV node'": "OUTCOME: Observe.",
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                "== False": {
+                                    "question": "What is the determined site of the AV Block?",
+                                    "branches": {
+                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                        "== 'AV node (Mobitz Type I)'": {
+                                            "question": "Does the patient have symptoms?",
+                                            "branches": {
+                                                "== True": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                "== False": "OUTCOME: Observe.",
+                                            },
+                                        },
+                                        "== 'Unclear (e.g., 2:1 AV Block)'": {
+                                            "question": "Does the patient have symptoms?",
+                                            "branches": {
+                                                "== True": {
+                                                    "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
+                                                    "branches": {
+                                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                        "== 'AV node'": "OUTCOME: Observe.",
+                                                    },
+                                                },
+                                                "== False": {
+                                                    "question": "What does Exercise testing (Class IIa) show as the site of the block?",
+                                                    "branches": {
+                                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                        "== 'AV node'": "OUTCOME: Observe.",
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        "== False": {
+            "question": "Is the block a Mobitz Type II 2°, Advanced, or Complete Heart Block?",
+            "branches": {
+                "== True": {
+                    "question": "Following a transthoracic echocardiogram (Class I), is there suspicion for infiltrative cardiomyopathy, endocarditis, or ACHD?",
+                    "branches": {
+                        "== True": "OUTCOME: Perform Advanced Imaging (Class IIa), then proceed to the AV block treatment algorithm†.",
+                        "== False": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                    },
+                },
+                "== False": {
+                    "question": "Is there a suspicion for structural heart disease?",
+                    "branches": {
+                        "== True": {
+                            "question": "After performing an echocardiogram, treating abnormalities, and considering advanced imaging, what is the determined site of the AV Block?",
+                            "branches": {
+                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                "== 'AV node (Mobitz Type I)'": {
+                                    "question": "Does the patient have symptoms?",
+                                    "branches": {
+                                        "== True": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                        "== False": "OUTCOME: Observe.",
+                                    },
+                                },
+                                "== 'Unclear (e.g., 2:1 AV Block)'": {
+                                    "question": "Does the patient have symptoms?",
+                                    "branches": {
+                                        "== True": {
+                                            "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
+                                            "branches": {
+                                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                "== 'AV node'": "OUTCOME: Observe.",
+                                            },
+                                        },
+                                        "== False": {
+                                            "question": "What does Exercise testing (Class IIa) show as the site of the block?",
+                                            "branches": {
+                                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                "== 'AV node'": "OUTCOME: Observe.",
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        "== False": {
+                            "question": "What is the determined site of the AV Block?",
+                            "branches": {
+                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                "== 'AV node (Mobitz Type I)'": {
+                                    "question": "Does the patient have symptoms?",
+                                    "branches": {
+                                        "== True": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                        "== False": "OUTCOME: Observe.",
+                                    },
+                                },
+                                "== 'Unclear (e.g., 2:1 AV Block)'": {
+                                    "question": "Does the patient have symptoms?",
+                                    "branches": {
+                                        "== True": {
+                                            "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
+                                            "branches": {
+                                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                "== 'AV node'": "OUTCOME: Observe.",
+                                            },
+                                        },
+                                        "== False": {
+                                            "question": "What does Exercise testing (Class IIa) show as the site of the block?",
+                                            "branches": {
+                                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                "== 'AV node'": "OUTCOME: Observe.",
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
