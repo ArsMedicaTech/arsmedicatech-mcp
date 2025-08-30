@@ -4,8 +4,7 @@ MCP server entry point.
 
 import datetime
 
-from trees import mcp  # type: ignore
-
+from lib.llm.mcp.trees.cardiology.bp import mcp  # type: ignore
 from settings import logger
 
 if __name__ == "__main__":
