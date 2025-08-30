@@ -11,10 +11,16 @@ BRADYCARDIA_MAIN_1_TREE: Dict[str, Any] = {
             "question": "After performing a comprehensive history, physical examination, ECG, and directed blood testing, what is the primary finding on the ECG?",
             "variable": "ecg_finding",
             "branches": {
-                "== 'SND*'": "OUTCOME: Proceed with the SND Diagnostic algorithm†.",
-                "== 'AV Block'": "OUTCOME: Proceed with the AV Block Diagnostic algorithm‡.",
-                "== 'Conduction disorder with 1:1 AV conduction'": "OUTCOME: Proceed with the Conduction disorder Diagnostic algorithm§.",
-                "== 'Nondiagnostic'": {
+                ("==", "SND*"): "OUTCOME: Proceed with the SND Diagnostic algorithm†.",
+                (
+                    "==",
+                    "AV Block",
+                ): "OUTCOME: Proceed with the AV Block Diagnostic algorithm‡.",
+                (
+                    "==",
+                    "Conduction disorder with 1:1 AV conduction",
+                ): "OUTCOME: Proceed with the Conduction disorder Diagnostic algorithm§.",
+                ("==", "Nondiagnostic"): {
                     "question": "Is structural heart disease suspected based on history and physical examination?",
                     "variable": "structural_heart_disease_suspected",
                     "branches": {
@@ -38,29 +44,50 @@ BRADYCARDIA_MAIN_2_TREE: Dict[str, Any] = {
             "question": "What is the result of the Exercise ECG testing?",
             "variable": "exercise_ecg_result",
             "branches": {
-                "== 'Normal'": {
+                ("==", "Normal"): {
                     "question": "What are the findings from subsequent Ambulatory ECG monitoring?",
                     "variable": "ambulatory_ecg_findings",
                     "branches": {
-                        "== 'Significant arrhythmias'": {
+                        ("==", "Significant arrhythmias"): {
                             "question": "What is the nature of the arrhythmia?",
                             "variable": "arrhythmia_nature",
                             "branches": {
-                                "== 'SND'": "OUTCOME: Proceed with the SND Diagnostic algorithm†.",
-                                "== 'AV Block'": "OUTCOME: Proceed with the AV Block Diagnostic algorithm‡.",
-                                "== 'Conduction disorder with 1:1 AV conduction'": "OUTCOME: Proceed with the Conduction disorder Diagnostic algorithm§.",
+                                (
+                                    "==",
+                                    "SND",
+                                ): "OUTCOME: Proceed with the SND Diagnostic algorithm†.",
+                                (
+                                    "==",
+                                    "AV Block",
+                                ): "OUTCOME: Proceed with the AV Block Diagnostic algorithm‡.",
+                                (
+                                    "==",
+                                    "Conduction disorder with 1:1 AV conduction",
+                                ): "OUTCOME: Proceed with the Conduction disorder Diagnostic algorithm§.",
                             },
                         },
-                        "== 'No significant arrhythmias'": "OUTCOME: Observation. If concern for bradycardia continues, consider an Implantable Cardiac Monitor (ICM).",
+                        (
+                            "==",
+                            "No significant arrhythmias",
+                        ): "OUTCOME: Observation. If concern for bradycardia continues, consider an Implantable Cardiac Monitor (ICM).",
                     },
                 },
-                "== 'Abnormal'": {
+                ("==", "Abnormal"): {
                     "question": "What is the nature of the abnormality?",
                     "variable": "abnormality_nature",
                     "branches": {
-                        "== 'SND'": "OUTCOME: Proceed with the SND Diagnostic algorithm†.",
-                        "== 'AV Block'": "OUTCOME: Proceed with the AV Block Diagnostic algorithm‡.",
-                        "== 'Conduction disorder with 1:1 AV conduction'": "OUTCOME: Proceed with the Conduction disorder Diagnostic algorithm§.",
+                        (
+                            "==",
+                            "SND",
+                        ): "OUTCOME: Proceed with the SND Diagnostic algorithm†.",
+                        (
+                            "==",
+                            "AV Block",
+                        ): "OUTCOME: Proceed with the AV Block Diagnostic algorithm‡.",
+                        (
+                            "==",
+                            "Conduction disorder with 1:1 AV conduction",
+                        ): "OUTCOME: Proceed with the Conduction disorder Diagnostic algorithm§.",
                     },
                 },
             },
@@ -73,32 +100,56 @@ BRADYCARDIA_MAIN_2_TREE: Dict[str, Any] = {
                     "question": "What are the findings from the Implantable Cardiac Monitor (ICM)?",
                     "variable": "icm_findings",
                     "branches": {
-                        "== 'Significant arrhythmias'": {
+                        ("==", "Significant arrhythmias"): {
                             "question": "What is the nature of the arrhythmia?",
                             "variable": "arrhythmia_nature",
                             "branches": {
-                                "== 'SND'": "OUTCOME: Proceed with the SND Diagnostic algorithm†.",
-                                "== 'AV Block'": "OUTCOME: Proceed with the AV Block Diagnostic algorithm‡.",
-                                "== 'Conduction disorder with 1:1 AV conduction'": "OUTCOME: Proceed with the Conduction disorder Diagnostic algorithm§.",
+                                (
+                                    "==",
+                                    "SND",
+                                ): "OUTCOME: Proceed with the SND Diagnostic algorithm†.",
+                                (
+                                    "==",
+                                    "AV Block",
+                                ): "OUTCOME: Proceed with the AV Block Diagnostic algorithm‡.",
+                                (
+                                    "==",
+                                    "Conduction disorder with 1:1 AV conduction",
+                                ): "OUTCOME: Proceed with the Conduction disorder Diagnostic algorithm§.",
                             },
                         },
-                        "== 'No significant arrhythmias'": "OUTCOME: Observation. If concern for bradycardia continues, continue monitoring with ICM.",
+                        (
+                            "==",
+                            "No significant arrhythmias",
+                        ): "OUTCOME: Observation. If concern for bradycardia continues, continue monitoring with ICM.",
                     },
                 },
                 ("==", False): {
                     "question": "What are the findings from Ambulatory ECG monitoring?",
                     "variable": "ambulatory_ecg_findings",
                     "branches": {
-                        "== 'Significant arrhythmias'": {
+                        ("==", "Significant arrhythmias"): {
                             "question": "What is the nature of the arrhythmia?",
                             "variable": "arrhythmia_nature",
                             "branches": {
-                                "== 'SND'": "OUTCOME: Proceed with the SND Diagnostic algorithm†.",
-                                "== 'AV Block'": "OUTCOME: Proceed with the AV Block Diagnostic algorithm‡.",
-                                "== 'Conduction disorder with 1:1 AV conduction'": "OUTCOME: Proceed with the Conduction disorder Diagnostic algorithm§.",
+                                (
+                                    "==",
+                                    "SND",
+                                ): "OUTCOME: Proceed with the SND Diagnostic algorithm†.",
+                                (
+                                    "==",
+                                    "AV Block",
+                                ): "OUTCOME: Proceed with the AV Block Diagnostic algorithm‡.",
+                                (
+                                    "==",
+                                    "Conduction disorder with 1:1 AV conduction",
+                                ): "OUTCOME: Proceed with the Conduction disorder Diagnostic algorithm§.",
                             },
                         },
-                        "== 'No significant arrhythmias'": "OUTCOME: Observation. If concern for bradycardia continues, consider an Implantable Cardiac Monitor (ICM).",
+                        (
+                            "==",
+                            "No significant arrhythmias",
+                        ): "OUTCOME: Observation. If concern for bradycardia continues, consider an Implantable Cardiac Monitor (ICM).",
                     },
                 },
             },
@@ -363,8 +414,11 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                                     "question": "After performing an echocardiogram, treating abnormalities, and considering advanced imaging, what is the determined site of the AV Block?",
                                     "variable": "av_block_site",
                                     "branches": {
-                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                        "== 'AV node (Mobitz Type I)'": {
+                                        (
+                                            "==",
+                                            "Infranodal",
+                                        ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                        ("==", "AV node (Mobitz Type I)"): {
                                             "question": "Does the patient have symptoms?",
                                             "variable": "symptoms_present",
                                             "branches": {
@@ -375,7 +429,7 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                                                 ("==", False): "OUTCOME: Observe.",
                                             },
                                         },
-                                        "== 'Unclear (e.g., 2:1 AV Block)'": {
+                                        ("==", "Unclear (e.g., 2:1 AV Block)"): {
                                             "question": "Does the patient have symptoms?",
                                             "variable": "symptoms_present",
                                             "branches": {
@@ -383,16 +437,28 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                                                     "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
                                                     "variable": "ep_study_result",
                                                     "branches": {
-                                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                                        "== 'AV node'": "OUTCOME: Observe.",
+                                                        (
+                                                            "==",
+                                                            "Infranodal",
+                                                        ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                        (
+                                                            "==",
+                                                            "AV node",
+                                                        ): "OUTCOME: Observe.",
                                                     },
                                                 },
                                                 ("==", False): {
                                                     "question": "What does Exercise testing (Class IIa) show as the site of the block?",
                                                     "variable": "exercise_ecg_result",
                                                     "branches": {
-                                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                                        "== 'AV node'": "OUTCOME: Observe.",
+                                                        (
+                                                            "==",
+                                                            "Infranodal",
+                                                        ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                        (
+                                                            "==",
+                                                            "AV node",
+                                                        ): "OUTCOME: Observe.",
                                                     },
                                                 },
                                             },
@@ -403,8 +469,14 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                                     "question": "What is the determined site of the AV Block?",
                                     "variable": "av_block_site",
                                     "branches": {
-                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                        "== 'AV node (Mobitz Type I)'": {
+                                        (
+                                            "==",
+                                            "Infranodal",
+                                        ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                        (
+                                            "==",
+                                            "AV node (Mobitz Type I)",
+                                        ): {
                                             "question": "Does the patient have symptoms?",
                                             "variable": "symptoms_present",
                                             "branches": {
@@ -415,22 +487,34 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                                                 ("==", False): "OUTCOME: Observe.",
                                             },
                                         },
-                                        "== 'Unclear (e.g., 2:1 AV Block)'": {
+                                        ("==", "Unclear (e.g., 2:1 AV Block)"): {
                                             "question": "Does the patient have symptoms?",
                                             "variable": "symptoms_present",
                                             "branches": {
                                                 ("==", True): {
                                                     "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
                                                     "branches": {
-                                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                                        "== 'AV node'": "OUTCOME: Observe.",
+                                                        (
+                                                            "==",
+                                                            "Infranodal",
+                                                        ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                        (
+                                                            "==",
+                                                            "AV node",
+                                                        ): "OUTCOME: Observe.",
                                                     },
                                                 },
                                                 ("==", False): {
                                                     "question": "What does Exercise testing (Class IIa) show as the site of the block?",
                                                     "branches": {
-                                                        "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                                        "== 'AV node'": "OUTCOME: Observe.",
+                                                        (
+                                                            "==",
+                                                            "Infranodal",
+                                                        ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                        (
+                                                            "==",
+                                                            "AV node",
+                                                        ): "OUTCOME: Observe.",
                                                     },
                                                 },
                                             },
@@ -469,8 +553,11 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                             "question": "After performing an echocardiogram, treating abnormalities, and considering advanced imaging, what is the determined site of the AV Block?",
                             "variable": "av_block_site",
                             "branches": {
-                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                "== 'AV node (Mobitz Type I)'": {
+                                (
+                                    "==",
+                                    "Infranodal",
+                                ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                ("==", "AV node (Mobitz Type I)"): {
                                     "question": "Does the patient have symptoms?",
                                     "variable": "symptoms_present",
                                     "branches": {
@@ -481,7 +568,7 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                                         ("==", False): "OUTCOME: Observe.",
                                     },
                                 },
-                                "== 'Unclear (e.g., 2:1 AV Block)'": {
+                                ("==", "Unclear (e.g., 2:1 AV Block)"): {
                                     "question": "Does the patient have symptoms?",
                                     "variable": "symptoms_present",
                                     "branches": {
@@ -489,16 +576,25 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                                             "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
                                             "variable": "ep_study_result",
                                             "branches": {
-                                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                                "== 'AV node'": "OUTCOME: Observe.",
+                                                (
+                                                    "==",
+                                                    "Infranodal",
+                                                ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                ("==", "AV node"): "OUTCOME: Observe.",
                                             },
                                         },
                                         ("==", False): {
                                             "question": "What does Exercise testing (Class IIa) show as the site of the block?",
                                             "variable": "exercise_ecg_result",
                                             "branches": {
-                                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                                "== 'AV node'": "OUTCOME: Observe.",
+                                                (
+                                                    "==",
+                                                    "Infranodal",
+                                                ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                (
+                                                    "==",
+                                                    "AV node",
+                                                ): "OUTCOME: Observe.",
                                             },
                                         },
                                     },
@@ -509,8 +605,11 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                             "question": "What is the determined site of the AV Block?",
                             "variable": "av_block_site",
                             "branches": {
-                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                "== 'AV node (Mobitz Type I)'": {
+                                (
+                                    "==",
+                                    "Infranodal",
+                                ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                ("==", "AV node (Mobitz Type I)"): {
                                     "question": "Does the patient have symptoms?",
                                     "variable": "symptoms_present",
                                     "branches": {
@@ -529,16 +628,22 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                                             "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
                                             "variable": "ep_study_result",
                                             "branches": {
-                                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                                "== 'AV node'": "OUTCOME: Observe.",
+                                                (
+                                                    "==",
+                                                    "Infranodal",
+                                                ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                ("==", "AV node"): "OUTCOME: Observe.",
                                             },
                                         },
                                         ("==", False): {
                                             "question": "What does Exercise testing (Class IIa) show as the site of the block?",
                                             "variable": "exercise_ecg_result",
                                             "branches": {
-                                                "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                                "== 'AV node'": "OUTCOME: Observe.",
+                                                (
+                                                    "==",
+                                                    "Infranodal",
+                                                ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                ("==", "AV node"): "OUTCOME: Observe.",
                                             },
                                         },
                                     },
@@ -563,7 +668,7 @@ ACUTE_BRADYCARDIA: Dict[str, Any] = {
                     "question": "What is the suspected type of drug toxicity?",
                     "variable": "suspected_drug_toxicity",
                     "branches": {
-                        "== 'Calcium channel blocker'": {
+                        ("==", "Calcium channel blocker"): {
                             "question": "After administering IV Calcium (COR IIa) followed by High dose Insulin (COR IIa), do symptoms continue?",
                             "variable": "symptoms_present_after_iv_calcium",
                             "branches": {
@@ -607,7 +712,7 @@ ACUTE_BRADYCARDIA: Dict[str, Any] = {
                                 ): "OUTCOME: Symptoms resolved. Continue observation.",
                             },
                         },
-                        "== 'Beta blocker'": {
+                        ("==", "Beta blocker"): {
                             "question": "After administering IV Glucagon (COR IIa) followed by High dose Insulin (COR IIa), do symptoms continue?",
                             "variable": "symptoms_present",
                             "branches": {
@@ -651,7 +756,7 @@ ACUTE_BRADYCARDIA: Dict[str, Any] = {
                                 ): "OUTCOME: Symptoms resolved. Continue observation.",
                             },
                         },
-                        "== 'Digoxin'": {
+                        ("==", "Digoxin"): {
                             "question": "After administering Anti-digoxin Fab (COR IIa), do symptoms continue?",
                             "variable": "symptoms_present_after_anti_digoxin_fab",
                             "branches": {
