@@ -91,3 +91,149 @@ BRADYCARDIA_MAIN_2_TREE: Dict[str, Any] = {
         },
     },
 }
+
+SND_TREE: Dict[str, Any] = {
+    "question": "Is the sinus node dysfunction (SND) due to a reversible or physiologic cause?",
+    "branches": {
+        "== True": {
+            "question": "After treating the underlying cause (Class I), is the treatment effective or unnecessary?",
+            "branches": {
+                "== True": "OUTCOME: Observe.",
+                "== False": {
+                    "question": "Is there a suspicion for structural heart disease?",
+                    "branches": {
+                        "== True": {
+                            "question": "Following a transthoracic echocardiogram (Class IIa), is there suspicion for infiltrative cardiomyopathy, endocarditis, or adult congenital heart disease (ACHD)?",
+                            "branches": {
+                                "== True": {
+                                    "question": "After performing Advanced Imaging (Class IIa) and treating identified abnormalities, does the patient still have symptoms?",
+                                    "branches": {
+                                        "== True": {
+                                            "question": "Are the symptoms exercise-related?",
+                                            "branches": {
+                                                "== True": {
+                                                    "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
+                                                    "branches": {
+                                                        "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                                    },
+                                                },
+                                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                            },
+                                        },
+                                        "== False": "OUTCOME: Observe.",
+                                    },
+                                },
+                                "== False": {
+                                    "question": "After treating any abnormalities identified on echo, does the patient still have symptoms?",
+                                    "branches": {
+                                        "== True": {
+                                            "question": "Are the symptoms exercise-related?",
+                                            "branches": {
+                                                "== True": {
+                                                    "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
+                                                    "branches": {
+                                                        "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                                    },
+                                                },
+                                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                            },
+                                        },
+                                        "== False": "OUTCOME: Observe.",
+                                    },
+                                },
+                            },
+                        },
+                        "== False": {
+                            "question": "Does the patient have symptoms?",
+                            "branches": {
+                                "== True": {
+                                    "question": "Are the symptoms exercise-related?",
+                                    "branches": {
+                                        "== True": {
+                                            "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
+                                            "branches": {
+                                                "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                            },
+                                        },
+                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                    },
+                                },
+                                "== False": "OUTCOME: Observe.",
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        "== False": {
+            "question": "Is there a suspicion for structural heart disease?",
+            "branches": {
+                "== True": {
+                    "question": "Following a transthoracic echocardiogram (Class IIa), is there suspicion for infiltrative cardiomyopathy, endocarditis, or adult congenital heart disease (ACHD)?",
+                    "branches": {
+                        "== True": {
+                            "question": "After performing Advanced Imaging (Class IIa) and treating identified abnormalities, does the patient still have symptoms?",
+                            "branches": {
+                                "== True": {
+                                    "question": "Are the symptoms exercise-related?",
+                                    "branches": {
+                                        "== True": {
+                                            "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
+                                            "branches": {
+                                                "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                            },
+                                        },
+                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                    },
+                                },
+                                "== False": "OUTCOME: Observe.",
+                            },
+                        },
+                        "== False": {
+                            "question": "After treating any abnormalities identified on echo, does the patient still have symptoms?",
+                            "branches": {
+                                "== True": {
+                                    "question": "Are the symptoms exercise-related?",
+                                    "branches": {
+                                        "== True": {
+                                            "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
+                                            "branches": {
+                                                "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                            },
+                                        },
+                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                    },
+                                },
+                                "== False": "OUTCOME: Observe.",
+                            },
+                        },
+                    },
+                },
+                "== False": {
+                    "question": "Does the patient have symptoms?",
+                    "branches": {
+                        "== True": {
+                            "question": "Are the symptoms exercise-related?",
+                            "branches": {
+                                "== True": {
+                                    "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
+                                    "branches": {
+                                        "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                    },
+                                },
+                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                            },
+                        },
+                        "== False": "OUTCOME: Observe.",
+                    },
+                },
+            },
+        },
+    },
+}
