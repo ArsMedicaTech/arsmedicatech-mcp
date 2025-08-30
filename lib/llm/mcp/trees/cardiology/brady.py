@@ -7,7 +7,7 @@ from typing import Any, Dict
 BRADYCARDIA_MAIN_1_TREE: Dict[str, Any] = {
     "question": "Does the patient present with symptoms suggestive of or consistent with bradycardia or a conduction disorder?",
     "branches": {
-        "== True": {
+        ("==", True): {
             "question": "After performing a comprehensive history, physical examination, ECG, and directed blood testing, what is the primary finding on the ECG?",
             "branches": {
                 "== 'SND*'": "OUTCOME: Proceed with the SND Diagnostic algorithm†.",
@@ -16,20 +16,23 @@ BRADYCARDIA_MAIN_1_TREE: Dict[str, Any] = {
                 "== 'Nondiagnostic'": {
                     "question": "Is structural heart disease suspected based on history and physical examination?",
                     "branches": {
-                        "== True": "OUTCOME: Perform Echocardiography.",
-                        "== False": "OUTCOME: The ECG is nondiagnostic and structural heart disease is not suspected. Further clinical evaluation is required.",
+                        ("==", True): "OUTCOME: Perform Echocardiography.",
+                        (
+                            "==",
+                            False,
+                        ): "OUTCOME: The ECG is nondiagnostic and structural heart disease is not suspected. Further clinical evaluation is required.",
                     },
                 },
             },
         },
-        "== False": "OUTCOME: This diagnostic algorithm is not applicable.",
+        ("==", False): "OUTCOME: This diagnostic algorithm is not applicable.",
     },
 }
 
 BRADYCARDIA_MAIN_2_TREE: Dict[str, Any] = {
     "question": "Does the patient have exercise-related symptoms?",
     "branches": {
-        "== True": {
+        ("==", True): {
             "question": "What is the result of the Exercise ECG testing?",
             "branches": {
                 "== 'Normal'": {
@@ -56,10 +59,10 @@ BRADYCARDIA_MAIN_2_TREE: Dict[str, Any] = {
                 },
             },
         },
-        "== False": {
+        ("==", False): {
             "question": "Are the symptoms infrequent (e.g., occurring less than once every 30 days)?",
             "branches": {
-                "== True": {
+                ("==", True): {
                     "question": "What are the findings from the Implantable Cardiac Monitor (ICM)?",
                     "branches": {
                         "== 'Significant arrhythmias'": {
@@ -73,7 +76,7 @@ BRADYCARDIA_MAIN_2_TREE: Dict[str, Any] = {
                         "== 'No significant arrhythmias'": "OUTCOME: Observation. If concern for bradycardia continues, continue monitoring with ICM.",
                     },
                 },
-                "== False": {
+                ("==", False): {
                     "question": "What are the findings from Ambulatory ECG monitoring?",
                     "branches": {
                         "== 'Significant arrhythmias'": {
@@ -95,142 +98,196 @@ BRADYCARDIA_MAIN_2_TREE: Dict[str, Any] = {
 SND_TREE: Dict[str, Any] = {
     "question": "Is the sinus node dysfunction (SND) due to a reversible or physiologic cause?",
     "branches": {
-        "== True": {
+        ("==", True): {
             "question": "After treating the underlying cause (Class I), is the treatment effective or unnecessary?",
             "branches": {
-                "== True": "OUTCOME: Observe.",
-                "== False": {
+                ("==", True): "OUTCOME: Observe.",
+                ("==", False): {
                     "question": "Is there a suspicion for structural heart disease?",
                     "branches": {
-                        "== True": {
+                        ("==", True): {
                             "question": "Following a transthoracic echocardiogram (Class IIa), is there suspicion for infiltrative cardiomyopathy, endocarditis, or adult congenital heart disease (ACHD)?",
                             "branches": {
-                                "== True": {
+                                ("==", True): {
                                     "question": "After performing Advanced Imaging (Class IIa) and treating identified abnormalities, does the patient still have symptoms?",
                                     "branches": {
-                                        "== True": {
+                                        ("==", True): {
                                             "question": "Are the symptoms exercise-related?",
                                             "branches": {
-                                                "== True": {
+                                                ("==", True): {
                                                     "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
                                                     "branches": {
-                                                        "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
-                                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                                        (
+                                                            "==",
+                                                            True,
+                                                        ): "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                                        (
+                                                            "==",
+                                                            False,
+                                                        ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                                                     },
                                                 },
-                                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                                (
+                                                    "==",
+                                                    False,
+                                                ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                                             },
                                         },
-                                        "== False": "OUTCOME: Observe.",
+                                        ("==", False): "OUTCOME: Observe.",
                                     },
                                 },
-                                "== False": {
+                                ("==", False): {
                                     "question": "After treating any abnormalities identified on echo, does the patient still have symptoms?",
                                     "branches": {
-                                        "== True": {
+                                        ("==", True): {
                                             "question": "Are the symptoms exercise-related?",
                                             "branches": {
-                                                "== True": {
+                                                ("==", True): {
                                                     "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
                                                     "branches": {
-                                                        "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
-                                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                                        (
+                                                            "==",
+                                                            True,
+                                                        ): "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                                        (
+                                                            "==",
+                                                            False,
+                                                        ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                                                     },
                                                 },
-                                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                                (
+                                                    "==",
+                                                    False,
+                                                ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                                             },
                                         },
-                                        "== False": "OUTCOME: Observe.",
+                                        ("==", False): "OUTCOME: Observe.",
                                     },
                                 },
                             },
                         },
-                        "== False": {
+                        ("==", False): {
                             "question": "Does the patient have symptoms?",
                             "branches": {
-                                "== True": {
+                                ("==", True): {
                                     "question": "Are the symptoms exercise-related?",
                                     "branches": {
-                                        "== True": {
+                                        ("==", True): {
                                             "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
                                             "branches": {
-                                                "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
-                                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                                (
+                                                    "==",
+                                                    True,
+                                                ): "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                                (
+                                                    "==",
+                                                    False,
+                                                ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                                             },
                                         },
-                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                        (
+                                            "==",
+                                            False,
+                                        ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                                     },
                                 },
-                                "== False": "OUTCOME: Observe.",
+                                ("==", False): "OUTCOME: Observe.",
                             },
                         },
                     },
                 },
             },
         },
-        "== False": {
+        ("==", False): {
             "question": "Is there a suspicion for structural heart disease?",
             "branches": {
-                "== True": {
+                ("==", True): {
                     "question": "Following a transthoracic echocardiogram (Class IIa), is there suspicion for infiltrative cardiomyopathy, endocarditis, or adult congenital heart disease (ACHD)?",
                     "branches": {
-                        "== True": {
+                        ("==", True): {
                             "question": "After performing Advanced Imaging (Class IIa) and treating identified abnormalities, does the patient still have symptoms?",
                             "branches": {
-                                "== True": {
+                                ("==", True): {
                                     "question": "Are the symptoms exercise-related?",
                                     "branches": {
-                                        "== True": {
+                                        ("==", True): {
                                             "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
                                             "branches": {
-                                                "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
-                                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                                (
+                                                    "==",
+                                                    True,
+                                                ): "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                                (
+                                                    "==",
+                                                    False,
+                                                ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                                             },
                                         },
-                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                        (
+                                            "==",
+                                            False,
+                                        ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                                     },
                                 },
-                                "== False": "OUTCOME: Observe.",
+                                ("==", False): "OUTCOME: Observe.",
                             },
                         },
-                        "== False": {
+                        ("==", False): {
                             "question": "After treating any abnormalities identified on echo, does the patient still have symptoms?",
                             "branches": {
-                                "== True": {
+                                ("==", True): {
                                     "question": "Are the symptoms exercise-related?",
                                     "branches": {
-                                        "== True": {
+                                        ("==", True): {
                                             "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
                                             "branches": {
-                                                "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
-                                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                                (
+                                                    "==",
+                                                    True,
+                                                ): "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                                (
+                                                    "==",
+                                                    False,
+                                                ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                                             },
                                         },
-                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                        (
+                                            "==",
+                                            False,
+                                        ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                                     },
                                 },
-                                "== False": "OUTCOME: Observe.",
+                                ("==", False): "OUTCOME: Observe.",
                             },
                         },
                     },
                 },
-                "== False": {
+                ("==", False): {
                     "question": "Does the patient have symptoms?",
                     "branches": {
-                        "== True": {
+                        ("==", True): {
                             "question": "Are the symptoms exercise-related?",
                             "branches": {
-                                "== True": {
+                                ("==", True): {
                                     "question": "Is the Exercise ECG testing (Class IIa) diagnostic?",
                                     "branches": {
-                                        "== True": "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
-                                        "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                        (
+                                            "==",
+                                            True,
+                                        ): "OUTCOME: Proceed to Sinus node dysfunction treatment algorithm‡.",
+                                        (
+                                            "==",
+                                            False,
+                                        ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                                     },
                                 },
-                                "== False": "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
+                                (
+                                    "==",
+                                    False,
+                                ): "OUTCOME: Perform Ambulatory ECG monitoring (Class I), consider Electrophysiology study (Class IIb), and proceed to the SND treatment algorithm‡.",
                             },
                         },
-                        "== False": "OUTCOME: Observe.",
+                        ("==", False): "OUTCOME: Observe.",
                     },
                 },
             },
@@ -241,45 +298,54 @@ SND_TREE: Dict[str, Any] = {
 AV_BLOCK_TREE: Dict[str, Any] = {
     "question": "Is the atrioventricular (AV) block due to a reversible or physiologic cause?",
     "branches": {
-        "== True": {
+        ("==", True): {
             "question": "After treating the underlying cause (Class I), is the treatment effective or unnecessary?",
             "branches": {
-                "== True": "OUTCOME: Observe.",
-                "== False": {
+                ("==", True): "OUTCOME: Observe.",
+                ("==", False): {
                     "question": "Is the block a Mobitz Type II 2°, Advanced, or Complete Heart Block?",
                     "branches": {
-                        "== True": {
+                        ("==", True): {
                             "question": "Following a transthoracic echocardiogram (Class I), is there suspicion for infiltrative cardiomyopathy, endocarditis, or ACHD?",
                             "branches": {
-                                "== True": "OUTCOME: Perform Advanced Imaging (Class IIa), then proceed to the AV block treatment algorithm†.",
-                                "== False": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                (
+                                    "==",
+                                    True,
+                                ): "OUTCOME: Perform Advanced Imaging (Class IIa), then proceed to the AV block treatment algorithm†.",
+                                (
+                                    "==",
+                                    False,
+                                ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
                             },
                         },
-                        "== False": {
+                        ("==", False): {
                             "question": "Is there a suspicion for structural heart disease?",
                             "branches": {
-                                "== True": {
+                                ("==", True): {
                                     "question": "After performing an echocardiogram, treating abnormalities, and considering advanced imaging, what is the determined site of the AV Block?",
                                     "branches": {
                                         "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
                                         "== 'AV node (Mobitz Type I)'": {
                                             "question": "Does the patient have symptoms?",
                                             "branches": {
-                                                "== True": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                                "== False": "OUTCOME: Observe.",
+                                                (
+                                                    "==",
+                                                    True,
+                                                ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                ("==", False): "OUTCOME: Observe.",
                                             },
                                         },
                                         "== 'Unclear (e.g., 2:1 AV Block)'": {
                                             "question": "Does the patient have symptoms?",
                                             "branches": {
-                                                "== True": {
+                                                ("==", True): {
                                                     "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
                                                     "branches": {
                                                         "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
                                                         "== 'AV node'": "OUTCOME: Observe.",
                                                     },
                                                 },
-                                                "== False": {
+                                                ("==", False): {
                                                     "question": "What does Exercise testing (Class IIa) show as the site of the block?",
                                                     "branches": {
                                                         "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
@@ -290,28 +356,31 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                                         },
                                     },
                                 },
-                                "== False": {
+                                ("==", False): {
                                     "question": "What is the determined site of the AV Block?",
                                     "branches": {
                                         "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
                                         "== 'AV node (Mobitz Type I)'": {
                                             "question": "Does the patient have symptoms?",
                                             "branches": {
-                                                "== True": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                                "== False": "OUTCOME: Observe.",
+                                                (
+                                                    "==",
+                                                    True,
+                                                ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                                ("==", False): "OUTCOME: Observe.",
                                             },
                                         },
                                         "== 'Unclear (e.g., 2:1 AV Block)'": {
                                             "question": "Does the patient have symptoms?",
                                             "branches": {
-                                                "== True": {
+                                                ("==", True): {
                                                     "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
                                                     "branches": {
                                                         "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
                                                         "== 'AV node'": "OUTCOME: Observe.",
                                                     },
                                                 },
-                                                "== False": {
+                                                ("==", False): {
                                                     "question": "What does Exercise testing (Class IIa) show as the site of the block?",
                                                     "branches": {
                                                         "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
@@ -328,41 +397,50 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                 },
             },
         },
-        "== False": {
+        ("==", False): {
             "question": "Is the block a Mobitz Type II 2°, Advanced, or Complete Heart Block?",
             "branches": {
-                "== True": {
+                ("==", True): {
                     "question": "Following a transthoracic echocardiogram (Class I), is there suspicion for infiltrative cardiomyopathy, endocarditis, or ACHD?",
                     "branches": {
-                        "== True": "OUTCOME: Perform Advanced Imaging (Class IIa), then proceed to the AV block treatment algorithm†.",
-                        "== False": "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                        (
+                            "==",
+                            True,
+                        ): "OUTCOME: Perform Advanced Imaging (Class IIa), then proceed to the AV block treatment algorithm†.",
+                        (
+                            "==",
+                            False,
+                        ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
                     },
                 },
-                "== False": {
+                ("==", False): {
                     "question": "Is there a suspicion for structural heart disease?",
                     "branches": {
-                        "== True": {
+                        ("==", True): {
                             "question": "After performing an echocardiogram, treating abnormalities, and considering advanced imaging, what is the determined site of the AV Block?",
                             "branches": {
                                 "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
                                 "== 'AV node (Mobitz Type I)'": {
                                     "question": "Does the patient have symptoms?",
                                     "branches": {
-                                        "== True": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                        "== False": "OUTCOME: Observe.",
+                                        (
+                                            "==",
+                                            True,
+                                        ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                        ("==", False): "OUTCOME: Observe.",
                                     },
                                 },
                                 "== 'Unclear (e.g., 2:1 AV Block)'": {
                                     "question": "Does the patient have symptoms?",
                                     "branches": {
-                                        "== True": {
+                                        ("==", True): {
                                             "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
                                             "branches": {
                                                 "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
                                                 "== 'AV node'": "OUTCOME: Observe.",
                                             },
                                         },
-                                        "== False": {
+                                        ("==", False): {
                                             "question": "What does Exercise testing (Class IIa) show as the site of the block?",
                                             "branches": {
                                                 "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
@@ -373,28 +451,31 @@ AV_BLOCK_TREE: Dict[str, Any] = {
                                 },
                             },
                         },
-                        "== False": {
+                        ("==", False): {
                             "question": "What is the determined site of the AV Block?",
                             "branches": {
                                 "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
                                 "== 'AV node (Mobitz Type I)'": {
                                     "question": "Does the patient have symptoms?",
                                     "branches": {
-                                        "== True": "OUTCOME: Proceed to the AV block treatment algorithm†.",
-                                        "== False": "OUTCOME: Observe.",
+                                        (
+                                            "==",
+                                            True,
+                                        ): "OUTCOME: Proceed to the AV block treatment algorithm†.",
+                                        ("==", False): "OUTCOME: Observe.",
                                     },
                                 },
                                 "== 'Unclear (e.g., 2:1 AV Block)'": {
                                     "question": "Does the patient have symptoms?",
                                     "branches": {
-                                        "== True": {
+                                        ("==", True): {
                                             "question": "What does the Electrophysiology study (Class IIb) show as the site of the block?",
                                             "branches": {
                                                 "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
                                                 "== 'AV node'": "OUTCOME: Observe.",
                                             },
                                         },
-                                        "== False": {
+                                        ("==", False): {
                                             "question": "What does Exercise testing (Class IIa) show as the site of the block?",
                                             "branches": {
                                                 "== 'Infranodal'": "OUTCOME: Proceed to the AV block treatment algorithm†.",
@@ -415,116 +496,176 @@ AV_BLOCK_TREE: Dict[str, Any] = {
 ACUTE_BRADYCARDIA: Dict[str, Any] = {
     "question": "After an initial stability assessment and treatment of reversible causes, does the patient with acute bradycardia have moderate or severe symptoms?",
     "branches": {
-        "== True": {
+        ("==", True): {
             "question": "After administration of Atropine, is the bradycardia suspected to be due to drug toxicity?",
             "branches": {
-                "== True": {
+                ("==", True): {
                     "question": "What is the suspected type of drug toxicity?",
                     "branches": {
                         "== 'Calcium channel blocker'": {
                             "question": "After administering IV Calcium (COR IIa) followed by High dose Insulin (COR IIa), do symptoms continue?",
                             "branches": {
-                                "== True": {
+                                ("==", True): {
                                     "question": "Is the patient now hemodynamically unstable or having severe symptoms?",
                                     "branches": {
-                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
-                                        "== False": {
+                                        (
+                                            "==",
+                                            True,
+                                        ): "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                        ("==", False): {
                                             "question": "Is there a Myocardial Infarction (MI) with AV Block?",
                                             "branches": {
-                                                "== True": "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
-                                                "== False": {
+                                                (
+                                                    "==",
+                                                    True,
+                                                ): "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
+                                                ("==", False): {
                                                     "question": "After administering Beta-agonists (COR IIb), do symptoms continue?",
                                                     "branches": {
-                                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
-                                                        "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                                                        (
+                                                            "==",
+                                                            True,
+                                                        ): "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                                        (
+                                                            "==",
+                                                            False,
+                                                        ): "OUTCOME: Symptoms resolved. Continue observation.",
                                                     },
                                                 },
                                             },
                                         },
                                     },
                                 },
-                                "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                                (
+                                    "==",
+                                    False,
+                                ): "OUTCOME: Symptoms resolved. Continue observation.",
                             },
                         },
                         "== 'Beta blocker'": {
                             "question": "After administering IV Glucagon (COR IIa) followed by High dose Insulin (COR IIa), do symptoms continue?",
                             "branches": {
-                                "== True": {
+                                ("==", True): {
                                     "question": "Is the patient now hemodynamically unstable or having severe symptoms?",
                                     "branches": {
-                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
-                                        "== False": {
+                                        (
+                                            "==",
+                                            True,
+                                        ): "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                        ("==", False): {
                                             "question": "Is there a Myocardial Infarction (MI) with AV Block?",
                                             "branches": {
-                                                "== True": "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
-                                                "== False": {
+                                                (
+                                                    "==",
+                                                    True,
+                                                ): "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
+                                                ("==", False): {
                                                     "question": "After administering Beta-agonists (COR IIb), do symptoms continue?",
                                                     "branches": {
-                                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
-                                                        "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                                                        (
+                                                            "==",
+                                                            True,
+                                                        ): "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                                        (
+                                                            "==",
+                                                            False,
+                                                        ): "OUTCOME: Symptoms resolved. Continue observation.",
                                                     },
                                                 },
                                             },
                                         },
                                     },
                                 },
-                                "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                                (
+                                    "==",
+                                    False,
+                                ): "OUTCOME: Symptoms resolved. Continue observation.",
                             },
                         },
                         "== 'Digoxin'": {
                             "question": "After administering Anti-digoxin Fab (COR IIa), do symptoms continue?",
                             "branches": {
-                                "== True": {
+                                ("==", True): {
                                     "question": "Is the patient now hemodynamically unstable or having severe symptoms?",
                                     "branches": {
-                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
-                                        "== False": {
+                                        (
+                                            "==",
+                                            True,
+                                        ): "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                        ("==", False): {
                                             "question": "Is there a Myocardial Infarction (MI) with AV Block?",
                                             "branches": {
-                                                "== True": "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
-                                                "== False": {
+                                                (
+                                                    "==",
+                                                    True,
+                                                ): "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
+                                                ("==", False): {
                                                     "question": "After administering Beta-agonists (COR IIb), do symptoms continue?",
                                                     "branches": {
-                                                        "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
-                                                        "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                                                        (
+                                                            "==",
+                                                            True,
+                                                        ): "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                                        (
+                                                            "==",
+                                                            False,
+                                                        ): "OUTCOME: Symptoms resolved. Continue observation.",
                                                     },
                                                 },
                                             },
                                         },
                                     },
                                 },
-                                "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                                (
+                                    "==",
+                                    False,
+                                ): "OUTCOME: Symptoms resolved. Continue observation.",
                             },
                         },
                     },
                 },
-                "== False": {
+                ("==", False): {
                     "question": "Do symptoms continue?",
                     "branches": {
-                        "== True": {
+                        ("==", True): {
                             "question": "Is the patient now hemodynamically unstable or having severe symptoms?",
                             "branches": {
-                                "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
-                                "== False": {
+                                (
+                                    "==",
+                                    True,
+                                ): "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                ("==", False): {
                                     "question": "Is there a Myocardial Infarction (MI) with AV Block?",
                                     "branches": {
-                                        "== True": "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
-                                        "== False": {
+                                        (
+                                            "==",
+                                            True,
+                                        ): "OUTCOME: Administer Aminophylline (COR IIb), then proceed to Acute Pacing Algorithm‡.",
+                                        ("==", False): {
                                             "question": "After administering Beta-agonists (COR IIb), do symptoms continue?",
                                             "branches": {
-                                                "== True": "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
-                                                "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                                                (
+                                                    "==",
+                                                    True,
+                                                ): "OUTCOME: Proceed to Acute Pacing Algorithm‡.",
+                                                (
+                                                    "==",
+                                                    False,
+                                                ): "OUTCOME: Symptoms resolved. Continue observation.",
                                             },
                                         },
                                     },
                                 },
                             },
                         },
-                        "== False": "OUTCOME: Symptoms resolved. Continue observation.",
+                        (
+                            "==",
+                            False,
+                        ): "OUTCOME: Symptoms resolved. Continue observation.",
                     },
                 },
             },
         },
-        "== False": "OUTCOME: Evaluation and observation.",
+        ("==", False): "OUTCOME: Evaluation and observation.",
     },
 }
