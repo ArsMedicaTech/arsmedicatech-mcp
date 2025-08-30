@@ -2,12 +2,15 @@
 Blood pressure decision tree for classifying blood pressure levels and providing recommendations.
 """
 
+import asyncio
 from typing import Annotated, Any, Dict
 
 from fastmcp import Context
 from pydantic import Field
 
 from lib.llm.mcp.trees.cardiology.afib import mcp
+from lib.llm.mcp.trees.common import decision_tree_lookup
+from settings import logger
 
 # ───────────────────────────────────────────────────────────
 #  Proof‑of‑concept decision tree: Blood‑pressure categories
