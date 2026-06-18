@@ -83,7 +83,9 @@ async def search_medical_literature_tool(
 @mcp.tool
 async def get_medical_evidence_tool(
     icd10_code: str = Field(description="ICD-10 code for the condition"),
-    condition: str = Field(description="Human-readable condition name"),
+    condition: Optional[str] = Field(
+        description="Human-readable condition name", default=None
+    ),
     ctx: Optional[Context] = None,
 ) -> Evidence:
     """

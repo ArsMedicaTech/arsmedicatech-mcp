@@ -33,3 +33,4 @@ docker-mcp:
 	docker push $(DOCKER_REGISTRY)/$(MCP_SERVER_IMAGE):$(MCP_SERVER_VERSION)
 	kubectl rollout restart deployment $(MCP_SERVER_DEPLOYMENT) --namespace=$(NAMESPACE)
 
+# npx @modelcontextprotocol/inspector@0.14.0

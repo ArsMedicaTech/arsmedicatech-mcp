@@ -266,13 +266,13 @@ def search_medical_literature(
 
 class Evidence(TypedDict):
     icd10_code: str
-    condition: str
+    condition: Optional[str]
     medline_info: Dict[str, Any]
     literature: MedicalLiteratureSearchResult
     summary: Dict[str, bool]
 
 
-def get_medical_evidence(icd10_code: str, condition: str) -> Evidence:
+def get_medical_evidence(icd10_code: str, condition: Optional[str]) -> Evidence:
     """
     Get comprehensive medical evidence for a condition including Medline info and literature.
 
@@ -283,6 +283,10 @@ def get_medical_evidence(icd10_code: str, condition: str) -> Evidence:
     Returns:
         Dictionary containing comprehensive medical evidence
     """
+    if condition is None:
+        # TODO: Alternative: Do a lookup to get condition name from ICD-10 code
+        condition = icd10_code  # Fallback to ICD-10 code if condition name not provided
+
     evidence: Evidence = {
         "icd10_code": icd10_code,
         "condition": condition,
